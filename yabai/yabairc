@@ -1,0 +1,74 @@
+# default layout (can be bsp, stack or float)
+yabai -m config layout bsp
+
+# new window spawns to the right if vertical split, or bottom if horizontal split
+yabai -m config window_placement second_child
+yabai -m config split_ratio 0.50
+
+yabai -m config top_padding 0
+yabai -m config bottom_padding 6
+yabai -m config left_padding 6
+yabai -m config right_padding 6
+yabai -m config window_gap 6
+
+
+# -- mouse settings --
+
+# center mouse on window with focus
+#yabai -m config mouse_follows_focus on
+
+# modifier for clicking and dragging with mouse
+#yabai -m config mouse_modifier alt
+# set modifier + left-click drag to move window
+#yabai -m config mouse_action1 move
+# set modifier + right-click drag to resize window
+#yabai -m config mouse_action2 resize
+
+# when window is dropped in center of another window, swap them (on edges it will split it)
+yabai -m mouse_drop_action swap
+
+
+# Rules
+ignored_apps=(
+  "1Password"
+  "Activity Monitor"
+  "Alfred Preferences"
+  "App Store"
+  "BetterTouchTool"
+  "Calculator"
+  "Finder"
+  "Installer"
+  "Messages"
+  "Messenger"
+  "Preview"
+  "System Information"
+  "System Preferences"
+  "System Settings"
+)
+
+for app in "${ignored_apps[@]}";
+do yabai -m rule --add app="${app}" manage=off;
+done;
+
+
+yabai -m rule --add app="Finder" title=" Info" manage=off
+yabai -m rule --add app="Finder" title="Copy" manage=off
+yabai -m rule --add app="Finder" title="Mov" manage=off
+yabai -m rule --add app="Finder" title="Trash" manage=off
+yabai -m rule --add title="Preferences" manage=off
+
+# Set initial ratios for certain apps
+# abs resizing only works for windows that aren't managed
+yabai -m signal --add event=application_launched action="zsh ~/.config/yabai/resize-initial-window.zsh"
+
+
+#Sketchybar and Jankyborders
+
+# add 20 padding to the top and 0 padding to the bottom of every space located on the main display
+yabai -m config external_bar main:30:0
+
+borders active_color=0xffccedff inactive_color=0xff494d64 width=6 2>/dev/null 1>&2 &
+
+yabai -m signal --add event=window_focused action="sketchybar --trigger window_focus"
+yabai -m signal --add event=window_created action="sketchybar --trigger windows_on_spaces"
+yabai -m signal --add event=window_destroyed action="sketchybar --trigger windows_on_spaces"j

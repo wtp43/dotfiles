@@ -1,0 +1,194 @@
+# #!/bin/bash
+
+source "$CONFIG_DIR/colors.sh" # Loads all defined colors
+# source "$CONFIG_DIR/icons.sh" # Loads all defined icons
+
+ITEM_DIR="$CONFIG_DIR/items" # Directory where the items are configured
+PLUGIN_DIR="$CONFIG_DIR/plugins" # Directory where all the plugin scripts are stored
+
+FONT="SF Pro" # Needs to have Regular, Bold, Semibold, Heavy and Black variants
+PADDINGS=3 # All paddings use this value (icon, label, background)
+
+# Setting up and starting the helper process
+HELPER=git.felix.helper
+killall helper
+(cd $CONFIG_DIR/helper && make)
+$CONFIG_DIR/helper/helper $HELPER > /dev/null 2>&1 &
+
+# # Unload the macOS on screen indicator overlay for volume change
+# launchctl unload -F /System/Library/LaunchAgents/com.apple.OSDUIHelper.plist > /dev/null 2>&1 &
+
+# # Setting up the general bar appearance of the bar
+# bar=(
+#   height=45
+#   color=$BAR_COLOR
+#   border_width=2
+#   border_color=$BAR_BORDER_COLOR
+#   shadow=off
+#   position=top
+#   sticky=on
+#   padding_right=10
+#   padding_left=10
+#   y_offset=-5
+#   margin=-2
+#   topmost=window
+# )
+
+# sketchybar --bar "${bar[@]}"
+
+# # Setting up default values
+# defaults=(
+#   updates=when_shown
+#   icon.font="$FONT:Bold:14.0"
+#   icon.color=$ICON_COLOR
+#   icon.padding_left=$PADDINGS
+#   icon.padding_right=$PADDINGS
+#   label.font="SF Symbols:Semibold:13.0"
+#   label.color=$LABEL_COLOR
+#   label.padding_left=$PADDINGS
+#   label.padding_right=$PADDINGS
+#   padding_right=$PADDINGS
+#   padding_left=$PADDINGS
+#   background.height=26
+#   background.corner_radius=9
+#   background.border_width=2
+#   popup.background.border_width=2
+#   popup.background.corner_radius=9
+#   popup.background.border_color=$POPUP_BORDER_COLOR
+#   popup.background.color=$POPUP_BACKGROUND_COLOR
+#   popup.blur_radius=20
+#   popup.background.shadow.drawing=on
+# )
+
+# sketchybar --default "${defaults[@]}"
+
+# # Left
+# source "$ITEM_DIR/apple.sh"
+# source "$ITEM_DIR/spaces.sh"
+# source "$ITEM_DIR/yabai.sh"
+# source "$ITEM_DIR/front_app.sh"
+
+# # Center
+# source "$ITEM_DIR/spotify.sh"
+
+# # Right
+# source "$ITEM_DIR/calendar.sh"
+# source "$ITEM_DIR/brew.sh"
+# source "$ITEM_DIR/github.sh"
+# source "$ITEM_DIR/wifi.sh"
+# source "$ITEM_DIR/battery.sh"
+# source "$ITEM_DIR/volume.sh"
+
+# sketchybar --hotload on
+
+# # Forcing all item scripts to run (never do this outside of sketchybarrc)
+# sketchybar --update
+
+# echo "sketchybar configuation loaded.."
+
+ICON_COLOR="0xffb0e1ff"
+LABEL_COLOR="0xfff8f8f2"
+
+PLUGIN_DIR="$HOME/.config/sketchybar/plugins"
+FONT_FAMILY="SF Pro"
+SPOTIFY_EVENT="com.spotify.client.PlaybackStateChanged"
+MAIN_DISPLAY=$(system_profiler SPDisplaysDataType | grep -B 3 'Main Display:' | awk '/Display Type/ {print $3}')
+
+sketchybar --bar height=32 \
+                 blur_radius=0 \
+                 position=top \
+                 sticky=off \
+                 padding_left=8 \
+                 padding_right=8 \
+                 color=transparent \
+                 y_offset=0 \
+                 font_smoothing=on
+
+sketchybar --default updates=when_shown \
+                     label.drawing=on \
+                     icon.drawing=on \
+                     background.color=0xff282930 \
+                     background.border_color=0xff000000 \
+                     background.border_width=2 \
+                     background.corner_radius=10 \
+                     background.padding_left=2 \
+                     background.padding_right=2 \
+                     background.height=32 \
+                     icon.font="$FONT_FAMILY:ExtraBold:16.0" \
+                     icon.color="$ICON_COLOR" \
+                     label.font="$FONT_FAMILY:ExtraBold:16.0" \
+                     label.color="$LABEL_COLOR" \
+                     label.padding_left=12 \
+                     label.padding_right=12 \
+                     icon.padding_left=12 \
+                     icon.padding_right=-4 \
+                     icon.y_offset=0
+
+SPACES=("dev" "algo" "main")
+for i in "${!SPACES[@]}"
+do
+  sid=$(($i+1))
+  sketchybar --add space space.$sid left \
+  sketchybar --set space.$sid associated_space=$sid \
+                              icon.font="$FONT_FAMILY:ExtraBold:16.0" \
+                              label.font="$FONT_FAMILY:ExtraBold:16.0" \
+                              icon="${SPACES[i]}" \
+                              icon.y_offset=0 \
+                              label.y_offset=0 \
+                              script="$PLUGIN_DIR/workspaces.sh" \
+                              associated_display=1 \
+                              background.padding_left=1 \
+                              background.padding_right=1 \
+                              click_script="yabai -m space --focus $sid" \
+             --subscribe space.$sid front_app_switched
+done
+
+sketchybar --add event window_focus \
+           --add event title_change 
+        #    --add event spotify_change $SPOTIFY_EVENT
+
+sketchybar --add item battery right \
+				--set battery script="$PLUGIN_DIR/battery.sh" \
+								icon.font="$FONT_FAMILY:ExtraBold:16.0" \
+								icon.y_offset=0 \
+								update_freq=120 \
+								associated_display=1 \
+				--subscribe battery system_woke power_source_change \
+			--add item time right \
+           --set time update_freq=10 \
+                      script="$PLUGIN_DIR/time.sh" \
+                      icon=􀇲 \
+                      icon.font="$FONT_FAMILY:ExtraBold:16.0" \
+                      icon.y_offset=0 \
+			--add item focus left \
+           --set focus script="$PLUGIN_DIR/focus.sh" \
+                       icon.color=0xD6000000\
+                       label.color=0xFFAB3558\
+						background.color=0xD8F2F5F3\
+						icon.font="$FONT_FAMILY:ExtraBold:16.0" \
+						label.y_offset=0 \
+                      icon.y_offset=0 \
+                       associated_display=active \
+					   --subscribe focus front_app_switched window_focus title_change display_change \
+			# --add item cpu right \
+			# 	--set cpu script="$ITEM_DIR/cpu.sh"
+        #    --add item date right \
+        #    --set date update_freq=10 \
+        #               script="$PLUGIN_DIR/date.sh" \
+        #               icon="" \
+        #               icon.font="$FONT_FAMILY:ExtraBold:16.0" \
+        #               icon.y_offset=0 \
+
+        
+
+# sketchybar --add item music right \
+#            --set music label.drawing=off \
+# 		       icon.drawing=off \
+#                        icon.font="sketchybar-app-font:ExtraBold:16.0" \
+#                        icon.y_offset=0 \
+#                        icon=":statistics:" \
+#                        script="$PLUGIN_DIR/music.sh" \
+#                        click_script="open -a Spotify" \
+# 	   --subscribe music spotify_change
+
+sketchybar --update
