@@ -33,16 +33,18 @@ return {
         ["<C-j>"] = cmp.mapping.select_next_item(), -- next suggestion
         ["<C-b>"] = cmp.mapping.scroll_docs(-4),
         ["<C-f>"] = cmp.mapping.scroll_docs(4),
-        ["<C-Space>"] = cmp.mapping.complete(), -- show completion suggestions
+        -- ["<C-Space>"] = cmp.mapping.complete(), -- show completion suggestions
         ["<C-e>"] = cmp.mapping.abort(), -- close completion window
-        ["<C-CR>"] = cmp.mapping.confirm({ select = false }),
+        ["<Tab>"] = cmp.mapping.confirm({ select = true }),
       }),
       -- sources for autocompletion
       sources = cmp.config.sources({
         { name = "nvim_lsp", keyword_length = 6, group_index = 1, max_item_count = 30 },
-        { name = "luasnip" }, -- snippets
-        { name = "buffer" }, -- text within current buffer
-        { name = "path" }, -- file system paths
+        -- { name = "copilot", group_index = 1, priority = 2 },
+        { name = "path", group_index = 2 }, -- file system paths
+        { name = "codeium", group_index = 1, priority = 2 },
+        { name = "luasnip", group_index = 2 }, -- snippets
+        { name = "buffer", group_index = 2 }, -- text within current buffer
       }),
       -- configure lspkind for vs-code like pictograms in completion menu
       formatting = {

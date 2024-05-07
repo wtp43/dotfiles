@@ -121,19 +121,54 @@ return {
       filetypes = { "html", "typescriptreact", "javascriptreact", "css", "sass", "scss", "less", "svelte" },
     })
 
-    -- configure emmet language server
     lspconfig["emmet_ls"].setup({
       capabilities = capabilities,
       on_attach = on_attach,
       filetypes = { "html", "typescriptreact", "javascriptreact", "css", "sass", "scss", "less", "svelte" },
     })
 
+    lspconfig["tailwindcss"].setup({
+      capabilities = capabilities,
+      on_attach = on_attach,
+      filetypes = { "html", "typescriptreact", "javascriptreact", "css", "svelte" },
+    })
+
+    lspconfig["jsonls"].setup({
+      capabilities = capabilities,
+      on_attach = on_attach,
+      filetypes = { "json" },
+    })
     -- configure python server
     lspconfig["pyright"].setup({
       capabilities = capabilities,
       on_attach = on_attach,
+      filetypes = { "python" },
     })
 
+    lspconfig["ruff_lsp"].setup({
+      on_attach = function(client)
+        client.server_capabilities.hoverProvider = false
+      end,
+      filetypes = { "python" },
+      settings = {
+        venvPath = vim.env.VIRTUAL_ENV and vim.env.VIRTUAL_ENV or vim.env.PYENV_ROOT,
+        -- analysis = {
+        --   autoSearchPaths = true,
+        --   useLibraryCodeForTypes = true,
+        --   diagnosticMode = "workspace",
+        -- },
+      },
+    })
+    -- configure graphql language server
+    lspconfig["graphql"].setup({
+      capabilities = capabilities,
+      on_attach = on_attach,
+      root_dir = lspconfig.util.root_pattern(".graphqlconfig", ".graphqlrc", "package.json"),
+      flags = {
+        debounce_text_changes = 150,
+      },
+      filetypes = { "graphql", "gql", "svelte", "typescriptreact", "javascriptreact" },
+    })
     -- configure lua server (with special settings)
     lspconfig["lua_ls"].setup({
       capabilities = capabilities,

@@ -2,11 +2,6 @@ return {
   "folke/flash.nvim",
   event = "VeryLazy",
   opts = {
-    char = {
-      matches = true,
-      multi_line = true,
-    },
-
     highlight = {
       backdrop = false,
     },

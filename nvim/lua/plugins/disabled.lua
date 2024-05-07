@@ -6,11 +6,14 @@ return {
     "jinh0/eyeliner.nvim",
     enabled = false,
   },
-  { "folke/flash.nvim", enabled = true },
   {
     "echasnovski/mini.ai",
     enabled = false,
   },
+  -- {
+  --   "echasnovski/mini.pairs",
+  --   enabled = false,
+  -- },
   {
     "folke/todo-comments.nvim",
     enabled = false,
@@ -19,16 +22,16 @@ return {
     "numToStr/Comment.nvim",
     enabled = false,
   },
-  {
-    "nvim-treesitter/nvim-treesitter-textobjects",
-    enabled = true,
-  },
+  -- {
+  --   "nvim-treesitter/nvim-treesitter-textobjects",
+  --   enabled = true,
+  -- },
   {
     "lewis6991/gitsigns.nvim",
     enabled = false,
   },
   {
-    "/echasnovski/mini.surround",
+    "echanovsky/mini.surround",
     enabled = false,
   },
 }

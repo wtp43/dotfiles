@@ -27,6 +27,9 @@ require("lazy").setup({
     -- version = "*", -- try installing the latest stable version for plugins that support semver
   },
   checker = { enabled = false }, -- automatically check for plugin updates
+  ui = {
+    border = "rounded",
+  },
   performance = {
     rtp = {
       -- disable some rtp plugins
@@ -35,6 +38,7 @@ require("lazy").setup({
         -- "matchit",
         -- "matchparen",
         -- "netrwPlugin",
+        "mini.surround",
         "tarPlugin",
         "tohtml",
         "tutor",

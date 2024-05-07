@@ -1,6 +1,18 @@
--- Keymaps are automatically loaded on the VeryLazy event
--- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
--- Add any additional keymaps here
-
 vim.keymap.set("n", "<C-d>", "<C-d>zz", { silent = true })
 vim.keymap.set("n", "<C-u>", "<C-u>zz", { silent = true })
+vim.keymap.set("n", "<C-e>", "10jjzz", { noremap = true, silent = true })
+vim.keymap.set("n", "<C-y>", "10kkzz", { noremap = true, silent = true })
+vim.keymap.set("n", "<leader>e", "<CMD>Oil --float<CR>", { desc = "Open parent directory" })
+vim.keymap.set("n", "P", "o<esc>p", { noremap = true, silent = true })
+vim.keymap.set("n", "<c-;>", "<cmd>Telescope toggleterm_manager<cr>", { desc = "Open toggleterm manager" })
+vim.keymap.set("n", "<leader>nn", "<cmd>NoiceDismiss <cr>", { desc = "Dismiss Notifications" })
+vim.keymap.set("n", "<leader>sl", "<cmd>vsplit<cr>", { desc = "Split right" })
+vim.keymap.set("n", "<leader>sj", "<cmd>split<cr>", { desc = "Split below" })
+vim.keymap.set("n", "<leader>wj", "<cmd>close<cr>", { desc = "Close window" })
+vim.keymap.set("n", "<CR>", "o<Esc>")
+-- Removing default LazyVim keymaps
+vim.keymap.del("n", "<leader>gG")
+vim.keymap.del("n", "<leader>un")
+vim.keymap.del("n", "<leader>xx")
+vim.keymap.del("n", "<leader>sna")
+vim.keymap.del({ "n", "x" }, "y")
