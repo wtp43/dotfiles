@@ -1,5 +1,6 @@
 return {
   "hrsh7th/nvim-cmp",
+  enabled = false,
   event = "InsertEnter",
   dependencies = {
     "hrsh7th/cmp-buffer", -- source for text in buffer
@@ -28,6 +29,12 @@ return {
           luasnip.lsp_expand(args.body)
         end,
       },
+      window = {
+        documentation = cmp.config.window.bordered(),
+        completion = cmp.config.window.bordered({
+          winhighlight = "Normal:CmpPmenu,CursorLine:PmenuSel,Search:None",
+        }),
+      },
       mapping = cmp.mapping.preset.insert({
         ["<C-k>"] = cmp.mapping.select_prev_item(), -- previous suggestion
         ["<C-j>"] = cmp.mapping.select_next_item(), -- next suggestion
@@ -39,12 +46,11 @@ return {
       }),
       -- sources for autocompletion
       sources = cmp.config.sources({
-        { name = "nvim_lsp", keyword_length = 6, group_index = 1, max_item_count = 30 },
-        -- { name = "copilot", group_index = 1, priority = 2 },
-        { name = "path", group_index = 2 }, -- file system paths
-        { name = "codeium", group_index = 1, priority = 2 },
-        { name = "luasnip", group_index = 2 }, -- snippets
-        { name = "buffer", group_index = 2 }, -- text within current buffer
+        { name = "nvim_lsp" },
+        { name = "codeium" },
+        { name = "luasnip" }, -- snippets
+        { name = "buffer" }, -- text within current buffer
+        { name = "path" }, -- file system paths
       }),
       -- configure lspkind for vs-code like pictograms in completion menu
       formatting = {

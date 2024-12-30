@@ -1,5 +1,6 @@
 return {
   "stevearc/oil.nvim",
+  enabled = true,
   opts = {
     float = {
       max_width = 60,
@@ -13,9 +14,12 @@ return {
       autosave_changes = true,
     },
     keymaps = {
-      ["<C-c>"] = "actions.close",
+      ["<Esc>"] = "actions.close",
+      ["<CR>"] = "actions.select",
+      ["<C-s>"] = false,
     },
   },
+
   -- Optional dependencies
   dependencies = { "nvim-tree/nvim-web-devicons" },
 }

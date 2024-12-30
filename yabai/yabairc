@@ -11,11 +11,13 @@ yabai -m config left_padding 6
 yabai -m config right_padding 6
 yabai -m config window_gap 6
 
+yabai -m config window_origin_display focused 
 
 # -- mouse settings --
 
 # center mouse on window with focus
-#yabai -m config mouse_follows_focus on
+# yabai -m config mouse_follows_focus on
+# yabai -m config focus_follows_mouse autoraise
 
 # modifier for clicking and dragging with mouse
 #yabai -m config mouse_modifier alt
@@ -25,23 +27,24 @@ yabai -m config window_gap 6
 #yabai -m config mouse_action2 resize
 
 # when window is dropped in center of another window, swap them (on edges it will split it)
-#yabai -m mouse_drop_action swap
+# yabai -m mouse_drop_action swap
 
 
 # Rules
 ignored_apps=(
-  "1Password"
-  "Activity Monitor"
-  "Alfred Preferences"
-  "App Store"
-  "BetterTouchTool"
-  "Calculator"
-  "Finder"
+  # "1Password"
+  # "Activity Monitor"
+  # "Alfred Preferences"
+  # "App Store"
+  # "BetterTouchTool"
+  # "Calculator"
+  # "Finder"
   "Installer"
   "Preview"
   "System Information"
-  "System Preferences"
-  "System Settings"
+  "Terminal"
+  # "System Preferences"
+  # "System Settings"
 )
 
 for app in "${ignored_apps[@]}";
@@ -49,11 +52,11 @@ do yabai -m rule --add app="${app}" manage=off;
 done;
 
 
-yabai -m rule --add app="Finder" title=" Info" manage=off
-yabai -m rule --add app="Finder" title="Copy" manage=off
-yabai -m rule --add app="Finder" title="Mov" manage=off
-yabai -m rule --add app="Finder" title="Trash" manage=off
-yabai -m rule --add title="Preferences" manage=off
+# yabai -m rule --add app="Finder" title=" Info" manage=off
+# yabai -m rule --add app="Finder" title="Copy" manage=off
+# yabai -m rule --add app="Finder" title="Mov" manage=off
+# yabai -m rule --add app="Finder" title="Trash" manage=off
+# yabai -m rule --add title="Preferences" manage=off
 
 # Set initial ratios for certain apps
 # abs resizing only works for windows that aren't managed
@@ -63,15 +66,19 @@ yabai -m rule --add title="Preferences" manage=off
 #Sketchybar and Jankyborders
 
 # add 20 padding to the top and 0 padding to the bottom of every space located on the main display
-yabai -m config external_bar main:30:0
+yabai -m config external_bar main:5:0
 
 borders active_color=0xffccedff inactive_color=0xff494d64 width=6 2>/dev/null 1>&2 &
 
-yabai -m signal --add event=window_focused action="sketchybar --trigger window_focus"
-yabai -m signal --add event=window_created action="sketchybar --trigger windows_on_spaces"
-yabai -m signal --add event=window_destroyed action="sketchybar --trigger windows_on_spaces"
+# yabai -m signal --add event=window_focused action="sketchybar --trigger window_focus"
+# yabai -m signal --add event=window_created action="sketchybar --trigger windows_on_spaces"
+# yabai -m signal --add event=window_destroyed action="sketchybar --trigger windows_on_spaces"
 # focus window after active space changes
 yabai -m signal --add event=space_changed action="yabai -m window --focus \$(yabai -m query --windows --space | jq .[0].id)"
 
 # focus window after active display changes
 yabai -m signal --add event=display_changed action="yabai -m window --focus \$(yabai -m query --windows --space | jq .[0].id)"
+
+yabai -m signal --add event=window_destroyed action="yabai -m query --windows --window &> /dev/null || yabai -m window --focus mouse"
+yabai -m signal --add event=application_terminated action="yabai -m query --windows --window &> /dev/null || yabai -m window --focus mouse"
+# YABAI_CERT=yabai-cert sh -c "$(curl -fsSL "https://git.io/update-yabai")" &

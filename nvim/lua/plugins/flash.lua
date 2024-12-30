@@ -7,12 +7,13 @@ return {
     },
     modes = {
       search = {
+        enabled = true,
         forward = false,
       },
       char = {
         matches = true,
         enabled = true,
-        jump_labels = false,
+        jump_labels = true,
         highlight = { backdrop = false },
         multi_line = true,
       },

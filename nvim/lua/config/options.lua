@@ -1,116 +1,26 @@
 -- Options are automatically loaded before lazy.nvim startup
 -- Default options that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/options.lua
 -- Add any additional options here
-vim.opt.clipboard = { "unnamed", "unnamedplus" }
+
+vim.g.maplocalleader = ","
+-- vim.opt.clipboard = { "unnamed", "unnamedplus" }
 vim.go.background = "dark"
-vim.g.toggleterm_terminal_mapping = 1
 vim.opt.wrap = true
 vim.opt.breakindent = true
 vim.opt.linebreak = true
-vim.g.python3_host_prog = "/Users/wt/.pyenv/versions/neovim3/bin/python"
--- vim.api.nvim_create_autocmd("ColorScheme", {
---   pattern = "*",
---   callback = function()
---     vim.api.nvim_set_hl(0, "Normal", { fg = "#444444", bg = "#e3e3e3" })
---     vim.api.nvim_set_hl(0, "SpellBad", { fg = "#aa0265" })
---     vim.api.nvim_set_hl(0, "ErrorMsg", { fg = "#aa0265" })
---     vim.api.nvim_set_hl(0, "Error", { fg = "#aa0265" })
---     -- vim.api.nvim_set_hl(0, "Normal", { fg = "#444444", bg = "#eeeeee" })
---   end,
--- })
+vim.g.python3_host_prog = "/Users/wt/.pyenv/versions/py3nvim/bin/python"
+vim.opt.pumblend = 0
+vim.opt.relativenumber = false
+vim.opt.termguicolors = true
 
--- highlight ColorColumn         guifg=NONE    guibg=#e4e4e4 gui=NONE
---   highlight Conceal             guifg=#444444 guibg=NONE    gui=NONE
---   highlight Cursor              guifg=#c6c6c6 guibg=NONE    gui=NONE
---   highlight CurSearch           guifg=#008700 guibg=#afff87 gui=NONE
---   highlight CursorColumn        guifg=NONE    guibg=#e4e4e4 gui=NONE
---   highlight CursorLine          guifg=NONE    guibg=#e4e4e4 gui=NONE
---   highlight CursorLineNr        guifg=#af5f00 guibg=NONE    gui=NONE
---   highlight DiffAdd             guifg=#444444 guibg=#afff87 gui=NONE
---   highlight DiffChange          guifg=#444444 guibg=#ffd787 gui=NONE
---   highlight DiffDelete          guifg=#444444 guibg=#ffd7ff gui=NONE
---   highlight DiffText            guifg=#0087af guibg=#ffffd7 gui=NONE
---   highlight Directory           guifg=#0087af guibg=NONE    gui=bold
---   highlight EndOfBuffer         guifg=#444444 guibg=NONE    gui=NONE
---   highlight ErrorMsg            guifg=#af0000 guibg=#ffd7ff gui=NONE
---   highlight FoldColumn          guifg=#0087af guibg=NONE    gui=NONE
---   highlight Folded              guifg=#444444 guibg=#e4e4e4 gui=NONE
---   highlight IncSearch           guifg=#008700 guibg=#afff87 gui=NONE
---   highlight LineNr              guifg=#878787 guibg=NONE    gui=NONE
---   highlight MatchParen          guifg=#4e4e4e guibg=#c6c6c6 gui=NONE
---   highlight ModeMsg             guifg=#5f8700 guibg=NONE    gui=NONE
---   highlight MoreMsg             guifg=#5f8700 guibg=NONE    gui=NONE
---   highlight NonText             guifg=#c6c6c6 guibg=NONE    gui=NONE
---   highlight Normal              guifg=#444444 guibg=#eeeeee gui=NONE
---   highlight NormalFloat         guifg=#444444 guibg=#e4e4e4 gui=NONE
---   highlight NormalNC            guifg=#444444 guibg=NONE    gui=NONE
---   highlight Pmenu               guifg=#444444 guibg=#e4e4e4 gui=NONE
---   highlight PmenuSel            guifg=#e4e4e4 guibg=#c6c6c6 gui=NONE
---   highlight Question            guifg=#5f8700 guibg=NONE    gui=NONE
---   highlight Search              guifg=#444444 guibg=#e4e4e4 gui=NONE
---   highlight SignColumn          guifg=#008700 guibg=NONE    gui=NONE
---   highlight SpecialKey          guifg=#c6c6c6 guibg=NONE    gui=NONE
---   highlight SpellBad            guifg=#af0000 guibg=NONE    gui=undercurl,italic
---   highlight SpellCap            guifg=#af5f00 guibg=NONE    gui=undercurl,italic
---   highlight SpellLocal          guifg=#d75f00 guibg=NONE    gui=undercurl,italic
---   highlight SpellRare           guifg=#af5f00 guibg=NONE    gui=undercurl,italic
---   highlight StatusLine          guifg=#fffff0 guibg=#005f87 gui=NONE
---   highlight StatusLineNC        guifg=#444444 guibg=#c6c6c6 gui=NONE
---   highlight Substitute          guifg=#008700 guibg=#afff87 gui=NONE
---   highlight TabLine             guifg=#444444 guibg=#c6c6c6 gui=NONE
---   highlight TabLineFill         guifg=#005f87 guibg=#005f87 gui=NONE
---   highlight TabLineSel          guifg=#444444 guibg=#e4e4e4 gui=NONE
---   highlight Title               guifg=#0087af guibg=NONE    gui=bold
---   highlight VertSplit           guifg=#005f87 guibg=NONE    gui=NONE
---   highlight Visual              guifg=#4e4e4e guibg=#c6c6c6 gui=NONE
---   highlight VisualNOS           guifg=#4e4e4e guibg=#c6c6c6 gui=NONE
---   highlight Whitespace          guifg=#c6c6c6 guibg=NONE    gui=NONE
---   highlight WarningMsg          guifg=#d70087 guibg=NONE    gui=NONE
---   highlight WildMenu            guifg=#fffff0 guibg=#d70087 gui=NONE
---
---   " Vim-preferred
---   highlight Comment             guifg=#878787 guibg=NONE    gui=italic
---   highlight Constant            guifg=#444444 guibg=NONE    gui=bold
---   highlight String              guifg=#5f8700 guibg=NONE    gui=NONE
---   highlight Character           guifg=#5f8700 guibg=NONE    gui=bold
---   highlight Number              guifg=#d75f00 guibg=NONE    gui=NONE
---   highlight Boolean             guifg=#af5f00 guibg=NONE    gui=bold
---   highlight Float               guifg=#d75f00 guibg=NONE    gui=NONE
---   highlight Identifier          guifg=#005f87 guibg=NONE    gui=NONE
---   highlight Function            guifg=#0087af guibg=NONE    gui=nocombine,NONE
---   highlight Statement           guifg=#d70087 guibg=NONE    gui=NONE
---   highlight Conditional         guifg=#d70087 guibg=NONE    gui=NONE
---   highlight Repeat              guifg=#d70087 guibg=NONE    gui=NONE
---   highlight Label               guifg=#d70087 guibg=NONE    gui=italic
---   highlight Operator            guifg=#005f87 guibg=NONE    gui=bold
---   highlight Keyword             guifg=#d70087 guibg=NONE    gui=NONE
---   highlight Exception           guifg=#d70087 guibg=NONE    gui=NONE
---   highlight PreProc             guifg=#d70087 guibg=NONE    gui=NONE
---   highlight Include             guifg=#d70087 guibg=NONE    gui=NONE
---   highlight Define              guifg=#008700 guibg=NONE    gui=NONE
---   highlight PreCondit           guifg=#008700 guibg=NONE    gui=NONE
---   highlight Type                guifg=#8700af guibg=NONE    gui=NONE
---   highlight StorageClass        guifg=#8700af guibg=NONE    gui=NONE
---   highlight Structure           guifg=#8700af guibg=NONE    gui=NONE
---   highlight Typedef             guifg=#8700af guibg=NONE    gui=NONE
---   highlight Special             guifg=#0087af guibg=NONE    gui=bold
---   highlight SpecialChar         guifg=#5f8700 guibg=NONE    gui=NONE
---   highlight Tag                 guifg=#008700 guibg=NONE    gui=NONE
---   highlight Delimiter           guifg=#0087af guibg=NONE    gui=NONE
---   highlight SpecialComment      guifg=#878787 guibg=NONE    gui=bold
---   highlight Debug               guifg=#d75f00 guibg=NONE    gui=NONE
---   highlight Underlined          guifg=NONE    guibg=NONE    gui=underline
---   highlight Error               guifg=#e60000 guibg=NONE    gui=bold
---   highlight Todo                guifg=#00af5f guibg=NONE    gui=bold
---   highlight Ignore              guifg=#005f87 guibg=NONE    gui=NONE
---
---   " PaperColorSlim Custom
---   highlight pcsFunctionBold     guifg=#0087af guibg=NONE    gui=bold
---   highlight pcsHtmlAnchor       guifg=#005f87 guibg=NONE    gui=underline
---   highlight pcsHtmlHeader1      guifg=#008700 guibg=NONE    gui=bold
---   highlight pcsHtmlHeader2      guifg=#0087af guibg=NONE    gui=bold
---   highlight pcsHtmlHeader3      guifg=#8700af guibg=NONE    gui=bold
---   highlight pcsHtmlHeader4      guifg=#d70087 guibg=NONE    gui=bold
---   highlight pcsHtmlHeader5      guifg=#d70087 guibg=NONE    gui=NONE
---   highlight pcsHtmlHeader6      guifg=#d70087 guibg=NONE    gui=italic
--- endif
+-- disable netrw for nvim-tree
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
+vim.filetype.add({
+  pattern = {
+    [".*values.yaml"] = "helm",
+  },
+})
+-- vim.opt.statuscolumn = ""
+vim.opt.signcolumn = "yes:1"

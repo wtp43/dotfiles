@@ -5,6 +5,7 @@ return {
     build = ":TSUpdate",
     dependencies = {
       "nvim-treesitter/nvim-treesitter-textobjects",
+      "JoosepAlviste/nvim-ts-context-commentstring",
       "windwp/nvim-ts-autotag",
     },
     config = function()
@@ -15,6 +16,7 @@ return {
       treesitter.setup({ -- enable syntax highlighting
         highlight = {
           enable = true,
+          additional_vim_regex_highlighting = false,
         },
         -- enable indentation
         indent = { enable = true },
@@ -31,10 +33,11 @@ return {
           "yaml",
           "html",
           "css",
-          "prisma",
+          -- "prisma",
           "markdown",
           "markdown_inline",
-          "svelte",
+          -- "svelte",
+          "helm",
           "graphql",
           "bash",
           "lua",
@@ -42,6 +45,7 @@ return {
           "dockerfile",
           "gitignore",
           "query",
+          "terraform",
         },
         incremental_selection = {
           enable = true,

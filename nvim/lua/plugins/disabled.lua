@@ -26,6 +26,8 @@ return {
   --   "nvim-treesitter/nvim-treesitter-textobjects",
   --   enabled = true,
   -- },
+  { "nvim-neo-tree/neo-tree.nvim", enabled = false },
+  { "akinsho/bufferline.nvim", enabled = false },
   {
     "lewis6991/gitsigns.nvim",
     enabled = false,
