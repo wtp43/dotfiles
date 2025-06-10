@@ -17,10 +17,23 @@ vim.opt.termguicolors = true
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
-vim.filetype.add({
-  pattern = {
-    [".*values.yaml"] = "helm",
-  },
-})
+-- vim.filetype.add({
+--   pattern = {
+--     [".*values.yaml"] = "helm",
+--   },
+-- })
 -- vim.opt.statuscolumn = ""
 vim.opt.signcolumn = "yes:1"
+
+vim.g.lazyvim_python_lsp = "pyright"
+
+vim.opt["tabstop"] = 2
+vim.opt["shiftwidth"] = 2
+vim.expandtab = true
+-- vim.g.lazyvim_eslint_auto_format = true
+-- vim.api.nvim_create_autocmd("BufWritePre", {
+--   pattern = "*",
+--   callback = function(args)
+--     require("conform").format({ bufnr = args.buf })
+--   end,
+-- })

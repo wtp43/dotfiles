@@ -17,6 +17,9 @@ return {
       sync_with_ring = true,
       clipboard_register = nil,
     },
+    preserve_cursor_position = {
+      enabled = true,
+    },
   },
   keys = {
     {
@@ -29,13 +32,13 @@ return {
     },
         -- stylua: ignore
     { "y", "<Plug>(YankyYank)", mode = { "n", "x" }, desc = "Yank Text" },
+    { "P", "<Plug>(YankyGPutAfterCharwise)", mode = { "n", "x" }, desc = "Put Text After Cursor" },
+    -- { "p", "<Plug>(YankyPutIndentAfterLinewise)", desc = "Put Indented After Cursor (Linewise)" },
     { "p", "<Plug>(YankyPutAfter)", mode = { "n", "x" }, desc = "Put Text After Cursor" },
-    -- { "P", "<Plug>(YankyPutBefore)", mode = { "n", "x" }, desc = "Put Text Before Cursor" },
     { "gp", "<Plug>(YankyGPutAfter)", mode = { "n", "x" }, desc = "Put Text After Selection" },
     { "gP", "<Plug>(YankyGPutBefore)", mode = { "n", "x" }, desc = "Put Text Before Selection" },
     { "[y", "<Plug>(YankyCycleForward)", desc = "Cycle Forward Through Yank History" },
     { "]y", "<Plug>(YankyCycleBackward)", desc = "Cycle Backward Through Yank History" },
-    { "P", "<Plug>(YankyPutIndentAfterLinewise)", desc = "Put Indented After Cursor (Linewise)" },
     { "[p", "<Plug>(YankyPutIndentBeforeLinewise)", desc = "Put Indented Before Cursor (Linewise)" },
     { "]P", "<Plug>(YankyPutIndentAfterLinewise)", desc = "Put Indented After Cursor (Linewise)" },
     { "[P", "<Plug>(YankyPutIndentBeforeLinewise)", desc = "Put Indented Before Cursor (Linewise)" },

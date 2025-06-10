@@ -1,14 +1,12 @@
 return {
   "OXY2DEV/markview.nvim",
   lazy = false, -- Recommended
-  -- ft = "markdown" -- If you decide to lazy-load anyway
+  enabled = false,
 
-  dependencies = {
-    "nvim-treesitter/nvim-treesitter",
-    "nvim-tree/nvim-web-devicons",
-  },
-
-  opts = {
-    filetypes = { "markdown", "quarto", "rmd", "mdx" },
+  -- opts = {
+  --   preview = { "markdown", "quarto", "rmd" },
+  -- },
+  depends = {
+    "saghen/blink.cmp",
   },
 }

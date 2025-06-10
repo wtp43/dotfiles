@@ -122,13 +122,13 @@ alt-shift-equal = 'resize smart +50'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#workspace
 alt-s = 'workspace work'
-alt-f = 'workspace org'
 alt-d = 'workspace social'
+alt-f = 'workspace org'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#move-node-to-workspace
-alt-u = 'move-node-to-workspace work'
-alt-o = 'move-node-to-workspace org'
-alt-i = 'move-node-to-workspace social'
+shift-alt-s = 'move-node-to-workspace work'
+shift-alt-d = 'move-node-to-workspace social'
+shift-alt-f = 'move-node-to-workspace org'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#workspace-back-and-forth
 # alt-tab = 'workspace-back-and-forth'
@@ -136,14 +136,11 @@ alt-i = 'move-node-to-workspace social'
 # alt-shift-tab = 'move-workspace-to-monitor --wrap-around next'
 
 # # See: https://nikitabobko.github.io/AeroSpace/commands#mode
-# alt-shift-semicolon = 'mode service'
 #
 # # 'service' binding mode declaration.
 # # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
 # [mode.service.binding]
-# esc = ['reload-config', 'mode main']
-# #s = ['layout sticky tiling', 'mode main'] # sticky is not yet supported https://github.com/nikitabobko/AeroSpace/issues/2
-# f = ['layout floating tiling', 'mode main'] # Toggle between floating and tiling layout
+alt-q = ['layout floating tiling', 'mode main'] # Toggle between floating and tiling layout
 # backspace = ['close-all-windows-but-current', 'mode main']
 
 
@@ -167,6 +164,7 @@ run = ['layout tiling', 'move-node-to-workspace social']
 [[on-window-detected]]
 if.app-id = 'com.github.wez.wezterm'
 run = ['layout tiling', 'move-node-to-workspace work']
+
 [[on-window-detected]]
 if.app-id = 'org.alacritty'
 run = ['layout tiling', 'move-node-to-workspace work']
@@ -183,10 +181,19 @@ run = ['layout floating']
 if.app-id = 'com.apple.MobileSMS'
 run = ['layout tiling', 'move-node-to-workspace social']
 
-# [[on-window-detected]]
-# if.app-id = 'org.mozilla.firefox'
-# run = ['layout tiling', 'move-node-to-workspace work']
-#
+[[on-window-detected]]
+if.app-name-regex-substring = '.*Camoufox.*'
+run = ['layout floating']
+
+[[on-window-detected]]
+if.app-name-regex-substring = 'Nightly'
+run = ['layout floating']
+
+[[on-window-detected]]
+if.app-id = 'org.mozilla.firefox'
+if.during-aerospace-startup = true
+run = ['layout tiling', 'move-node-to-workspace work']
+
 [[on-window-detected]]
 if.app-id = 'com.google.Chrome'
 run = ['layout tiling', 'move-node-to-workspace work']
@@ -201,9 +208,12 @@ if.app-id = 'com.macpaw.site.theunarchiver'
 run = ['layout floating']
 
 [[on-window-detected]]
-if.app-id="com.mitchellh.ghostty"
-run= [
-  "layout tiling",
-]
+if.app-id = 'com.tidal.desktop'
+run = ['layout tiling', 'move-node-to-workspace social']
 
+[[on-window-detected]]
+if.app-id="com.mitchellh.ghostty"
+if.during-aerospace-startup = true
+check-further-callbacks = true
+run = ['layout floating','move-node-to-workspace work'] 
 

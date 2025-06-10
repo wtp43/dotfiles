@@ -1,4 +1,39 @@
-font-size = 24
 copy-on-select = true
 theme = my-theme
+#font-family = SF Mono
+
+# config in ghostty
+font-size=22
+font-family=FiraCode Nerd Font Mono
+# adjust-cell-width = "-2%"
+# adjust-cell-height = "6%"
+
+
+macos-titlebar-proxy-icon=hidden
+mouse-hide-while-typing=true
+clipboard-read=allow
+unfocused-split-opacity=1
+
+
+# keybinds
+# keybind = ctrl+cmd+o=next_tab
+keybind = ctrl+cmd+r=reload_config
+
+# split actions
+# keybind = ctrl+a>j=new_split:down
+# keybind = ctrl+a>k=new_split:up
+# keybind = ctrl+a>l=new_split:right
+# keybind = ctrl+a>h=new_split:left
+# keybind = ctrl+j=goto_split:down
+# keybind = ctrl+k=goto_split:up
+# keybind = ctrl+l=goto_split:right
+# keybind = ctrl+h=goto_split:left
+
+keybind = ctrl+a>i=increase_font_size:1
+keybind = ctrl+a>u=decrease_font_size:1
+
+keybind = ctrl+a>t=toggle_quick_terminal
+
+
+
 

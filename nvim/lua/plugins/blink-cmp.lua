@@ -4,6 +4,13 @@ return {
   version = "v0.*", -- REQUIRED `tag` needed to download pre-built binary
   dependencies = { "codeium.nvim", "saghen/blink.compat" },
   opts = {
+    enabled = function()
+      local path = vim.api.nvim_buf_get_name(0)
+      if string.find(path, "oil://", 1, true) == 1 then
+        return false
+      end
+      return true
+    end,
     snippets = {
       expand = function(snippet, _)
         return LazyVim.cmp.expand(snippet)
@@ -19,6 +26,9 @@ return {
       nerd_font_variant = "mono",
     },
     completion = {
+      keyword = {
+        range = "prefix",
+      },
       accept = {
         -- experimental auto-brackets support
         auto_brackets = {
@@ -35,38 +45,40 @@ return {
       },
       documentation = {
         auto_show = true,
-        auto_show_delay_ms = 0,
+        auto_show_delay_ms = 200,
         window = {
           border = "rounded",
           winhighlight = "Normal:Normal,FloatBorder:FloatBorder,CursorLine:BlinkCmpDocCursorLine,Search:None",
         },
       },
       ghost_text = {
-        enabled = vim.g.ai_cmp,
+        -- enabled = vim.g.ai_cmp,
+        enabled = false,
       },
     },
 
     -- experimental signature help support
     -- signature = { enabled = true },
 
-    sources = {
-      -- adding any nvim-cmp sources here will enable them
-      -- with blink.compat
-      default = { "lsp", "path", "snippets", "buffer" },
-      compat = { "codeium" },
-      providers = {
-        codeium = {
-          kind = "Codeium",
-          score_offset = 100,
-          async = true,
-        },
-      },
-      cmdline = {},
-    },
+    -- sources = {
+    --   -- adding any nvim-cmp sources here will enable them
+    --   -- with blink.compat
+    --   -- sdf
+    --   default = { "lsp", "snippets", "buffer" },
+    --
+    --   compat = { "codeium" },
+    --   providers = {
+    --     codeium = {
+    --       kind = "Codeium",
+    --       score_offset = 100,
+    --       async = true,
+    --     },
+    --   },
+    -- },
 
     keymap = {
-      preset = "none",
-      ["<Tab>"] = { "select_and_accept" },
+      preset = "super-tab",
+      ["<C-y>"] = { "select_and_accept" },
       ["<Up>"] = { "select_prev", "fallback" },
       ["<Down>"] = { "select_next", "fallback" },
     },

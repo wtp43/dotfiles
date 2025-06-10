@@ -1,6 +1,7 @@
 return {
   "mfussenegger/nvim-lint",
   lazy = true,
+  enabled = false,
   event = { "BufReadPre", "BufNewFile" }, -- to disable, comment this out
   opts = {
     -- other config
@@ -24,7 +25,7 @@ return {
       javascriptreact = { "eslint_d" },
       typescriptreact = { "eslint_d" },
       svelte = { "eslint_d" },
-      python = { "ruff" },
+      -- python = { "ruff" },
       -- yaml = { "yamllint" },
     },
   },

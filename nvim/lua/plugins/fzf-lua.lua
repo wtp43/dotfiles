@@ -1,5 +1,6 @@
 return {
   "ibhagwan/fzf-lua",
+  enabled = false,
   cmd = "FzfLua",
   opts = function(_, opts)
     local config = require("fzf-lua.config")
@@ -98,6 +99,9 @@ return {
           },
         })
       end,
+      keys = {
+        { "<leader><space>", LazyVim.pick("files", { root = false }), desc = "Find Files (cwd)" },
+      },
       winopts = {
         width = 0.8,
         height = 0.8,
@@ -176,13 +180,14 @@ return {
     { "<leader>:", "<cmd>FzfLua command_history<cr>", desc = "Command History" },
     { "<leader><space>", LazyVim.pick("files"), desc = "Find Files (Root Dir)" },
     -- find
-    { "<leader>fb", "<cmd>FzfLua buffers sort_mru=true sort_lastused=true<cr>", desc = "Buffers" },
-    { "<leader>fc", LazyVim.pick.config_files(), desc = "Find Config File" },
-    { "<leader>ff", LazyVim.pick("files"), desc = "Find Files (Root Dir)" },
-    { "<leader>fF", LazyVim.pick("files", { root = false }), desc = "Find Files (cwd)" },
-    { "<leader>fg", "<cmd>FzfLua git_files<cr>", desc = "Find Files (git-files)" },
-    { "<leader>fr", "<cmd>FzfLua oldfiles<cr>", desc = "Recent" },
-    { "<leader>fR", LazyVim.pick("oldfiles", { cwd = vim.uv.cwd() }), desc = "Recent (cwd)" },
+    { "<leader>ff", "<cmd>FzfLua grep_curbuf<cr>", desc = "Buffer" },
+    -- { "<leader>fb", "<cmd>FzfLua buffers sort_mru=true sort_lastused=true<cr>", desc = "Buffers" },
+    -- { "<leader>fc", LazyVim.pick.config_files(), desc = "Find Config File" },
+    -- { "<leader>ff", LazyVim.pick("files"), desc = "Find Files (Root Dir)" },
+    -- { "<leader>fF", LazyVim.pick("files", { root = false }), desc = "Find Files (cwd)" },
+    -- { "<leader>fg", "<cmd>FzfLua git_files<cr>", desc = "Find Files (git-files)" },
+    -- { "<leader>fr", "<cmd>FzfLua oldfiles<cr>", desc = "Recent" },
+    -- { "<leader>fR", LazyVim.pick("oldfiles", { cwd = vim.uv.cwd() }), desc = "Recent (cwd)" },
     -- git
     { "<leader>gc", "<cmd>FzfLua git_commits<CR>", desc = "Commits" },
     { "<leader>gs", "<cmd>FzfLua git_status<CR>", desc = "Status" },
@@ -203,7 +208,7 @@ return {
     { "<leader>sl", "<cmd>FzfLua loclist<cr>", desc = "Location List" },
     { "<leader>sM", "<cmd>FzfLua man_pages<cr>", desc = "Man Pages" },
     { "<leader>sm", "<cmd>FzfLua marks<cr>", desc = "Jump to Mark" },
-    { "<leader>sR", "<cmd>FzfLua resume<cr>", desc = "Resume" },
+    { "<leader>tt", "<cmd>FzfLua resume<cr>", desc = "Resume" },
     { "<leader>sq", "<cmd>FzfLua quickfix<cr>", desc = "Quickfix List" },
     { "<leader>sw", LazyVim.pick("grep_cword"), desc = "Word (Root Dir)" },
     { "<leader>sW", LazyVim.pick("grep_cword", { root = false }), desc = "Word (cwd)" },
