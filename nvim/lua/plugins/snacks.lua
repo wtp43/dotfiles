@@ -5,8 +5,18 @@ return {
   ---@type snacks.Config
   opts = {
     picker = {
-      hidden = true,
-      ignore = true,
+      sources = {
+        files = {
+          hidden = true,
+          ignored = true,
+          exclude = { "node_modules", ".git", ".venv", "dist", ".turbo" },
+        },
+        grep = {
+          hidden = true,
+          ignored = true,
+          exclude = { "node_modules", ".git", ".venv", "dist", ".turbo" },
+        },
+      },
     },
     scroll = { enabled = false },
     bigfile = { enabled = true },
@@ -418,7 +428,7 @@ return {
       desc = "Quickfix List",
     },
     {
-      "<leader>sR",
+      "<leader>j",
       function()
         Snacks.picker.resume()
       end,
@@ -491,6 +501,7 @@ return {
     },
   },
   init = function()
+    vim.b.autoformat = true
     vim.api.nvim_create_autocmd("User", {
       pattern = "VeryLazy",
       callback = function()
@@ -504,6 +515,18 @@ return {
         vim.print = _G.dd -- Override print to use snacks for `:=` command
 
         -- Create some toggle mappings
+        Snacks.toggle
+          .new({
+            id = "Toggle formatting for current buffer",
+            name = "Toggle formatting for current buffer",
+            get = function()
+              return vim.b.autoformat
+            end,
+            set = function(_)
+              vim.b.autoformat = not vim.b.autoformat
+            end,
+          })
+          :map("<leader>uf")
         Snacks.toggle.option("spell", { name = "Spelling" }):map("<leader>us")
         Snacks.toggle.option("wrap", { name = "Wrap" }):map("<leader>uw")
         Snacks.toggle.option("relativenumber", { name = "Relative Number" }):map("<leader>uL")

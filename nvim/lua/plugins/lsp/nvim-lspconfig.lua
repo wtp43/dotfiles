@@ -3,10 +3,34 @@ return {
     "neovim/nvim-lspconfig",
 
     opts = {
+      inlay_hints = { enabled = false },
       servers = {
+        basedpyright = {
+          settings = {
+            disableOrganizeImports = true,
+            basedpyright = {
+              analysis = {
+                autoSearchPaths = true,
+                diagnosticMode = "openFilesOnly",
+                useLibraryCodeForTypes = true,
+                typeCheckingMode = "basic",
+              },
+            },
+          },
+        },
         vtsls = {
           settings = {
             format = false,
+            javascript = {
+              preferences = {
+                importModuleSpecifier = "non-relative",
+              },
+            },
+            typescript = {
+              preferences = {
+                importModuleSpecifier = "non-relative",
+              },
+            },
           },
         },
       },
@@ -136,21 +160,21 @@ return {
       --   --   --   },
       --   --   -- },
       --   -- })
-      --   lspconfig.pyright.setup({
-      --     pyright = {
-      --       disableOrganizeImports = true,
-      --       disableTaggedHints = true,
-      --     },
-      --     python = {
-      --       analysis = {
-      --         diagnosticSeverityOverrides = {
-      --           -- https://github.com/microsoft/pyright/blob/main/docs/configuration.md#type-check-diagnostics-settings
-      --           reportUndefinedVariable = "none",
-      --         },
+      -- lspconfig.pyright.setup({
+      --   pyright = {
+      --     disableOrganizeImports = true,
+      --     disableTaggedHints = true,
+      --   },
+      --   python = {
+      --     analysis = {
+      --       diagnosticSeverityOverrides = {
+      --         -- https://github.com/microsoft/pyright/blob/main/docs/configuration.md#type-check-diagnostics-settings
+      --         reportUndefinedVariable = "none",
       --       },
       --     },
-      --   })
-      --   vim.diagnostic.config({ virtual_text = false })
+      --   },
+      -- })
+      -- vim.diagnostic.config({ virtual_text = false })
       -- end,
     },
   },

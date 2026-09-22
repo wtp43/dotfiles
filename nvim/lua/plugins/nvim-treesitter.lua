@@ -46,7 +46,11 @@ return {
           "gitignore",
           "query",
           "terraform",
+          "python",
+          "sql",
+          "toml",
         },
+        auto_install = true,
         incremental_selection = {
           enable = true,
           keymaps = {

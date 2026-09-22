@@ -4,6 +4,10 @@
 # It's not necessary to copy all keys to your config.
 # If the key is missing in your config, "default-config.toml" will serve as a fallback
 
+# Config version for compatibility and deprecations.
+# See: https://nikitabobko.github.io/AeroSpace/guide#config-version
+config-version = 2
+
 # You can use it to add commands that run after login to macOS user session.
 # 'start-at-login' needs to be 'true' for 'after-login-command' to work
 # Available commands: https://nikitabobko.github.io/AeroSpace/commands
@@ -16,7 +20,7 @@ after-startup-command = [ 'exec-and-forget borders active_color=0xffdee9ff inact
     'workspace work','layout tiles']
 
 exec-on-workspace-change = ['/bin/bash', '-c',
-    '/opt/homebrew/opt/sketchybar/bin/sketchybar --trigger aerospace_workspace_change FOCUSED=$AEROSPACE_FOCUSED_WORKSPACE'
+    '/opt/homebrew/opt/sketchybar/bin/sketchybar --trigger aerospace_workspace_change FOCUSED=$AEROSPACE_FOCUSED_WORKSPACE; /Users/wt/.config/aerospace/solidtime-mini.sh "$AEROSPACE_FOCUSED_WORKSPACE" &'
 ]
 
 # Start AeroSpace at login
@@ -38,6 +42,10 @@ default-root-container-layout = 'tiles'
 # 'auto' means: wide monitor (anything wider than high) gets horizontal orientation,
 #               tall monitor (anything higher than wide) gets vertical orientation
 default-root-container-orientation = 'horizontal'
+
+# Workspaces that stay alive even when empty. In config-version 1 this was
+# inferred from keybindings; config-version 2 requires it to be explicit.
+persistent-workspaces = ['work', 'social', 'org', 'misc', 'k8s', 'read']
 
 # Possible values: (qwerty|dvorak)
 # See https://nikitabobko.github.io/AeroSpace/guide#key-mapping
@@ -124,11 +132,19 @@ alt-shift-equal = 'resize smart +50'
 alt-s = 'workspace work'
 alt-d = 'workspace social'
 alt-f = 'workspace org'
+alt-a = 'workspace misc'
+alt-g = 'workspace k8s'
+alt-b = 'workspace read'
+
+
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#move-node-to-workspace
 shift-alt-s = 'move-node-to-workspace work'
 shift-alt-d = 'move-node-to-workspace social'
 shift-alt-f = 'move-node-to-workspace org'
+shift-alt-a = 'move-node-to-workspace misc'
+shift-alt-g = 'move-node-to-workspace k8s'
+shift-alt-b = 'move-node-to-workspace read'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#workspace-back-and-forth
 # alt-tab = 'workspace-back-and-forth'
@@ -143,15 +159,35 @@ shift-alt-f = 'move-node-to-workspace org'
 alt-q = ['layout floating tiling', 'mode main'] # Toggle between floating and tiling layout
 # backspace = ['close-all-windows-but-current', 'mode main']
 
+# NOTE: osascript -e 'id of app "x"'
 
+[[on-window-detected]]
+if.app-id = 'app.freelens.Freelens'
+run = ['layout tiling', 'move-node-to-workspace k8s']
 
 [[on-window-detected]]
 if.app-id = 'md.obsidian'
 run = ['layout tiling', 'move-node-to-workspace work']
 
 [[on-window-detected]]
+if.app-id = 'com.tinyapp.TablePlus'
+run = ['layout tiling', 'move-node-to-workspace misc']
+
+
+[[on-window-detected]]
+if.app-id = 'me.qii404.another-redis-desktop-manager'
+run = ['layout tiling', 'move-node-to-workspace misc']
+
+[[on-window-detected]]
 if.app-id = 'com.akiflow.akiflow'
 run = ['layout tiling', 'move-node-to-workspace org']
+
+# solidtime main window: tile in 'org' next to Superthread at its current width.
+# No 'layout tiling' on purpose — the floating Mini-Tracker shares this app-id,
+# so forcing tiling would capture it; omitting it lets the Mini-Tracker float.
+[[on-window-detected]]
+if.app-id = 'io.solidtime.desktop'
+run = ['exec-and-forget /Users/wt/.config/aerospace/solidtime-layout.sh']
 
 [[on-window-detected]]
 if.app-id = 'com.spotify.client'
@@ -189,14 +225,25 @@ run = ['layout floating']
 if.app-name-regex-substring = 'Nightly'
 run = ['layout floating']
 
+# Dev browsers launched from my code (Playwright/Puppeteer etc.). Newer
+# Playwright ships "Google Chrome for Testing", older ships Chromium; match
+# both. Real Google Chrome is com.google.Chrome and stays managed.
 [[on-window-detected]]
-if.app-id = 'org.mozilla.firefox'
-if.during-aerospace-startup = true
-run = ['layout tiling', 'move-node-to-workspace work']
+if.app-id = 'org.chromium.Chromium'
+run = ['layout floating']
 
 [[on-window-detected]]
-if.app-id = 'com.google.Chrome'
-run = ['layout tiling', 'move-node-to-workspace work']
+if.app-id = 'com.google.chrome.for.testing'
+run = ['layout floating']
+
+# [[on-window-detected]]
+# if.app-id = 'org.mozilla.firefox'
+# if.during-aerospace-startup = true
+# run = ['layout tiling', 'move-node-to-workspace work']
+#
+# [[on-window-detected]]
+# if.app-id = 'com.google.Chrome'
+# run = ['layout tiling', 'move-node-to-workspace work']
 
 
 [[on-window-detected]]
@@ -210,6 +257,8 @@ run = ['layout floating']
 [[on-window-detected]]
 if.app-id = 'com.tidal.desktop'
 run = ['layout tiling', 'move-node-to-workspace social']
+
+
 
 [[on-window-detected]]
 if.app-id="com.mitchellh.ghostty"

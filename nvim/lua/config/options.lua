@@ -25,15 +25,15 @@ vim.g.loaded_netrwPlugin = 1
 -- vim.opt.statuscolumn = ""
 vim.opt.signcolumn = "yes:1"
 
-vim.g.lazyvim_python_lsp = "pyright"
+vim.g.lazyvim_python_lsp = "basedpyright"
 
 vim.opt["tabstop"] = 2
 vim.opt["shiftwidth"] = 2
 vim.expandtab = true
 -- vim.g.lazyvim_eslint_auto_format = true
--- vim.api.nvim_create_autocmd("BufWritePre", {
---   pattern = "*",
---   callback = function(args)
---     require("conform").format({ bufnr = args.buf })
---   end,
--- })
+vim.api.nvim_create_autocmd("BufWritePre", {
+  pattern = "*",
+  callback = function(args)
+    require("conform").format({ bufnr = args.buf, async = true, lsp_fallback = true })
+  end,
+})

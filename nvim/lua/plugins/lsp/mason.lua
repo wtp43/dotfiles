@@ -35,6 +35,7 @@ return {
         "lua_ls",
         -- "emmet_ls",
         -- "pyright",
+        "basedpyright",
         "yamlls",
         -- "helm_ls",
         -- "ruff",
@@ -48,7 +49,9 @@ return {
         "isort", -- python formatter
         "black", -- python formatter
         "pylint",
+        "ruff",
         "eslint_d",
+        -- "sql_formatter"
       },
     })
   end,
