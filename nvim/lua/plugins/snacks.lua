@@ -1,3 +1,16 @@
+-- Names match any path segment, so "assets" also hides src/assets.
+local search_exclude = {
+  ".git",
+  -- JS / TS
+  "node_modules", "dist", "build", "out", "coverage", ".turbo", ".next", ".expo", ".cache",
+  -- native / mobile
+  "ios", "android", "assets", "Pods", ".gradle", "DerivedData",
+  -- Python
+  ".venv", "venv", "__pycache__", ".pytest_cache", ".mypy_cache", ".ruff_cache", "site-packages", "*.egg-info",
+  -- other vendored deps
+  "vendor", "target",
+}
+
 return {
   "folke/snacks.nvim",
   priority = 1000,
@@ -9,12 +22,12 @@ return {
         files = {
           hidden = true,
           ignored = true,
-          exclude = { "node_modules", ".git", ".venv", "dist", ".turbo" },
+          exclude = search_exclude,
         },
         grep = {
           hidden = true,
           ignored = true,
-          exclude = { "node_modules", ".git", ".venv", "dist", ".turbo" },
+          exclude = search_exclude,
         },
       },
     },
