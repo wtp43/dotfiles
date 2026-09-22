@@ -1,7 +1,6 @@
 return {
   "saghen/blink.cmp",
   event = "InsertEnter",
-  version = "v0.*", -- REQUIRED `tag` needed to download pre-built binary
   dependencies = { "codeium.nvim", "saghen/blink.compat" },
   opts = {
     enabled = function()

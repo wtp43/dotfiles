@@ -5,6 +5,7 @@ return {
     float = {
       max_width = 60,
       max_height = 30,
+      border = "rounded",
     },
     lsp_file_methods = {
       -- Time to wait for LSP file operations to complete before skipping

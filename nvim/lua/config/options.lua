@@ -3,7 +3,8 @@
 -- Add any additional options here
 
 vim.g.maplocalleader = ","
--- vim.opt.clipboard = { "unnamed", "unnamedplus" }
+vim.opt.clipboard = "unnamedplus"
+vim.g.clipboard = "osc52"
 vim.go.background = "dark"
 vim.opt.wrap = true
 vim.opt.breakindent = true
@@ -22,8 +23,6 @@ vim.g.loaded_netrwPlugin = 1
 --     [".*values.yaml"] = "helm",
 --   },
 -- })
--- vim.opt.statuscolumn = ""
-vim.opt.signcolumn = "yes:1"
 
 vim.g.lazyvim_python_lsp = "basedpyright"
 

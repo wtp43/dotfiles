@@ -32,18 +32,5 @@ return { -- lazy.nvim
 		},
   },
 
-  {
-    "numToStr/Comment.nvim",
-    opts = {
-      -- add any options here
-    },
-    lazy = false,
-  },
 
-  {
-    "jinh0/eyeliner.nvim",
-    opts = {
-      highlight_on_key = true,
-    },
-  },
 }

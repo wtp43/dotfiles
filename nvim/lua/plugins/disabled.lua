@@ -1,25 +1,17 @@
 return {
 
   { "ggandor/flit.nvim", enabled = false },
-  { "ggandor/leap.nvim", enabled = false },
+  { "https://codeberg.org/andyg/leap.nvim.git", enabled = false },
   {
-    "jinh0/eyeliner.nvim",
-    enabled = false,
-  },
-  {
-    "echasnovski/mini.ai",
+    "nvim-mini/mini.ai",
     enabled = false,
   },
   -- {
-  --   "echasnovski/mini.pairs",
+  --   "nvim-mini/mini.pairs",
   --   enabled = false,
   -- },
   {
     "folke/todo-comments.nvim",
-    enabled = false,
-  },
-  {
-    "numToStr/Comment.nvim",
     enabled = false,
   },
   -- {

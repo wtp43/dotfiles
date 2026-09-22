@@ -40,10 +40,6 @@ vim.keymap.set("n", "<leader>rr", "<cmd>GrugFar<cr>", { desc = "Search/Replace" 
 vim.keymap.set("n", "<c-p>", "<Plug>(YankyPreviousEntry)")
 vim.keymap.set("n", "<c-n>", "<Plug>(YankyNextEntry)")
 
-vim.keymap.del("n", "H")
-vim.keymap.del("n", "L")
-vim.keymap.set("n", "H", require("arrow.persist").previous)
-vim.keymap.set("n", "L", require("arrow.persist").next)
 
 -- cheerio schema format macro
 

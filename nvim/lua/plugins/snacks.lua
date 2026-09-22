@@ -47,8 +47,8 @@ return {
       enabled = true,
       timeout = 3000,
     },
+    image = { enabled = true },
     quickfile = { enabled = true },
-    statuscolumn = { enabled = false },
     words = { enabled = true },
     styles = {
       notification = {

@@ -11,10 +11,9 @@ return {
     "nvim-tree/nvim-tree.lua",
     version = "*",
     event = { "BufReadPre", "BufNewFile" },
-    enabled = false,
     keys = {
       {
-        "<leader>e",
+        "<leader>fe",
         function()
           require("nvim-tree.api").tree.toggle({
             path = "cwd",
@@ -23,7 +22,7 @@ return {
         desc = "Toggle Tree(cwd)",
       },
       {
-        "<leader>E",
+        "<leader>fE",
         function()
           require("nvim-tree.api").tree.toggle({
             path = "/",
@@ -46,7 +45,13 @@ return {
         end
         api.config.mappings.default_on_attach(bufnr)
         vim.keymap.set("n", "P", preview.watch, opts("Preview (Watch)"))
-        vim.keymap.set("n", "<Esc>", preview.unwatch, opts("Close Preview/Unwatch"))
+        vim.keymap.set("n", "<Esc>", function()
+          if preview.is_watching() or preview.is_open() then
+            preview.unwatch()
+          else
+            api.tree.close()
+          end
+        end, opts("Close Preview or Tree"))
         vim.keymap.set("n", "?", api.tree.toggle_help, opts("Help"))
         -- Option B: Smart tab behavior: Only preview files, expand/collapse directories.
         vim.keymap.set("n", "<Tab>", function()
@@ -106,9 +111,9 @@ return {
           number = true,
           relativenumber = true,
           signcolumn = "yes",
-          width = 40,
+          width = 30,
           float = {
-            enable = true,
+            enable = false,
             open_win_config = function()
               local WIDTH_RATIO = 0.4
               local HEIGHT_RATIO = 0.8
@@ -225,10 +230,6 @@ return {
         update_focused_file = {
           enable = false,
           update_root = false,
-        },
-        system_open = {
-          cmd = "",
-          args = {},
         },
         git = {
           enable = true,

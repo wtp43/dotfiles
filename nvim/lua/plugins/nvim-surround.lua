@@ -1,14 +1,9 @@
 return {
   "kylechui/nvim-surround",
-  version = "*", -- Use for stability; omit to use `main` branch for the latest features
+  version = "*",
   event = "VeryLazy",
-  opts = {
-    keymaps = {
-      change = "yc",
-      change_line = "yC",
-      normal = "ys",
-      normal_line = "yS",
-      delete = "ds",
-    },
-  },
+  config = function()
+    vim.keymap.set("n", "yc", "<Plug>(nvim-surround-change)", { desc = "Change a surrounding pair" })
+    vim.keymap.set("n", "yC", "<Plug>(nvim-surround-change-line)", { desc = "Change a surrounding pair on new lines" })
+  end,
 }

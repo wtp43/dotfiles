@@ -136,24 +136,23 @@ return {
             -- mantle = "#1c1e29",
             -- -- crust = "#0e0f16",
           },
+        },
 
-          integrations = {
-            treesitter = true,
-            notify = true,
-            flash = true,
-            indent_blank = {
-              enabled = true,
-              colored_indent_levels = false,
-            },
-            noice = false,
-            dashboard = true,
-            blink_cmp = true,
-            fzf = true,
-            lsp_trouble = true,
-            which_key = true,
-            snacks = true,
+        integrations = {
+          treesitter = true,
+          notify = true,
+          flash = true,
+          indent_blank = {
+            enabled = true,
+            colored_indent_levels = false,
           },
-          highlights = require("catppuccin.groups.integrations.bufferline").get(),
+          noice = false,
+          dashboard = true,
+          blink_cmp = true,
+          fzf = true,
+          lsp_trouble = true,
+          which_key = true,
+          snacks = true,
         },
       })
     end,
@@ -186,7 +185,7 @@ return {
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "catppuccin",
+      colorscheme = "catppuccin-mocha",
     },
   },
 }
