@@ -2,12 +2,14 @@ theme = my-theme
 #font-family = SF Mono
 
 # config in ghostty
-font-size=22
+font-size=13
 font-family=FiraCode Nerd Font Mono
 # adjust-cell-width = "-2%"
-# adjust-cell-height = "6%"
+adjust-cell-height = 10%
+adjust-cursor-height = -25%
 
 
+auto-update-channel = tip
 macos-titlebar-proxy-icon=hidden
 mouse-hide-while-typing=true
 clipboard-read=allow
@@ -15,6 +17,8 @@ clipboard-write=allow
 copy-on-select=clipboard
 unfocused-split-opacity=1
 mouse-scroll-multiplier=0.25
+# zshrc sets the vi-mode cursor; Ghostty's own can only blink both shapes or neither.
+shell-integration-features = no-cursor
 
 # keybinds
 # keybind = ctrl+cmd+o=next_tab
