@@ -4,7 +4,9 @@
 
 vim.g.maplocalleader = ","
 vim.opt.clipboard = "unnamedplus"
-vim.g.clipboard = "osc52"
+if vim.env.SSH_TTY then
+  vim.g.clipboard = "osc52"
+end
 vim.go.background = "dark"
 vim.opt.wrap = true
 vim.opt.breakindent = true
