@@ -1,99 +1,91 @@
+local function select(query)
+  return function()
+    require("nvim-treesitter-textobjects.select").select_textobject(query, "textobjects")
+  end
+end
+
+local function swap(method, query)
+  return function()
+    require("nvim-treesitter-textobjects.swap")[method](query)
+  end
+end
+
+local function move(method, query, group)
+  return function()
+    require("nvim-treesitter-textobjects.move")[method](query, group)
+  end
+end
+
 return {
   "nvim-treesitter/nvim-treesitter-textobjects",
-  lazy = true,
-  enabled = true,
-  config = function()
-    require("nvim-treesitter.configs").setup({
-      textobjects = {
-        select = {
-          enable = true,
-
-          -- Automatically jump forward to textobj, similar to targets.vim
-          lookahead = true,
-
-          keymaps = {
-            -- You can use the capture groups defined in textobjects.scm
-            ["a="] = { query = "@assignment.outer", desc = "Select outer part of an assignment" },
-            ["i="] = { query = "@assignment.inner", desc = "Select inner part of an assignment" },
-            ["l="] = { query = "@assignment.lhs", desc = "Select left hand side of an assignment" },
-            ["r="] = { query = "@assignment.rhs", desc = "Select right hand side of an assignment" },
-
-            -- works for javascript/typescript files (custom capture I created in after/queries/ecma/textobjects.scm)
-            ["a:"] = { query = "@property.outer", desc = "Select outer part of an object property" },
-            ["i:"] = { query = "@property.inner", desc = "Select inner part of an object property" },
-            ["l:"] = { query = "@property.lhs", desc = "Select left part of an object property" },
-            ["r:"] = { query = "@property.rhs", desc = "Select right part of an object property" },
-
-            ["aa"] = { query = "@parameter.outer", desc = "Select outer part of a parameter/argument" },
-            ["ia"] = { query = "@parameter.inner", desc = "Select inner part of a parameter/argument" },
-
-            ["ai"] = { query = "@conditional.outer", desc = "Select outer part of a conditional" },
-            ["ii"] = { query = "@conditional.inner", desc = "Select inner part of a conditional" },
-
-            ["al"] = { query = "@loop.outer", desc = "Select outer part of a loop" },
-            ["il"] = { query = "@loop.inner", desc = "Select inner part of a loop" },
-
-            ["af"] = { query = "@call.outer", desc = "Select outer part of a function call" },
-            ["if"] = { query = "@call.inner", desc = "Select inner part of a function call" },
-
-            ["am"] = { query = "@function.outer", desc = "Select outer part of a method/function definition" },
-            ["im"] = { query = "@function.inner", desc = "Select inner part of a method/function definition" },
-
-            ["ac"] = { query = "@class.outer", desc = "Select outer part of a class" },
-            ["ic"] = { query = "@class.inner", desc = "Select inner part of a class" },
-          },
+  opts = {
+    select = { lookahead = true },
+    move = {
+      keys = {
+        goto_next_start = {
+          ["]f"] = "@call.outer",
+          ["]m"] = "@function.outer",
+          ["]c"] = "@class.outer",
+          ["]i"] = "@conditional.outer",
+          ["]l"] = "@loop.outer",
         },
-        swap = {
-          enable = true,
-          swap_next = {
-            ["<leader>na"] = "@parameter.inner", -- swap parameters/argument with next
-            ["<leader>n:"] = "@property.outer", -- swap object property with next
-            ["<leader>nm"] = "@function.outer", -- swap function with next
-          },
-          swap_previous = {
-            ["<leader>pa"] = "@parameter.inner", -- swap parameters/argument with prev
-            ["<leader>p:"] = "@property.outer", -- swap object property with prev
-            ["<leader>pm"] = "@function.outer", -- swap function with previous
-          },
+        goto_next_end = {
+          ["]F"] = "@call.outer",
+          ["]M"] = "@function.outer",
+          ["]C"] = "@class.outer",
+          ["]I"] = "@conditional.outer",
+          ["]L"] = "@loop.outer",
         },
-        move = {
-          enable = true,
-          set_jumps = true, -- whether to set jumps in the jumplist
-          goto_next_start = {
-            ["]f"] = { query = "@call.outer", desc = "Next function call start" },
-            ["]m"] = { query = "@function.outer", desc = "Next method/function def start" },
-            ["]c"] = { query = "@class.outer", desc = "Next class start" },
-            ["]i"] = { query = "@conditional.outer", desc = "Next conditional start" },
-            ["]l"] = { query = "@loop.outer", desc = "Next loop start" },
-
-            -- You can pass a query group to use query from `queries/<lang>/<query_group>.scm file in your runtime path.
-            -- Below example nvim-treesitter's `locals.scm` and `folds.scm`. They also provide highlights.scm and indent.scm.
-            ["]s"] = { query = "@scope", query_group = "locals", desc = "Next scope" },
-            ["]z"] = { query = "@fold", query_group = "folds", desc = "Next fold" },
-          },
-          goto_next_end = {
-            ["]F"] = { query = "@call.outer", desc = "Next function call end" },
-            ["]M"] = { query = "@function.outer", desc = "Next method/function def end" },
-            ["]C"] = { query = "@class.outer", desc = "Next class end" },
-            ["]I"] = { query = "@conditional.outer", desc = "Next conditional end" },
-            ["]L"] = { query = "@loop.outer", desc = "Next loop end" },
-          },
-          goto_previous_start = {
-            ["[f"] = { query = "@call.outer", desc = "Prev function call start" },
-            ["[m"] = { query = "@function.outer", desc = "Prev method/function def start" },
-            ["[c"] = { query = "@class.outer", desc = "Prev class start" },
-            ["[i"] = { query = "@conditional.outer", desc = "Prev conditional start" },
-            ["[l"] = { query = "@loop.outer", desc = "Prev loop start" },
-          },
-          goto_previous_end = {
-            ["[F"] = { query = "@call.outer", desc = "Prev function call end" },
-            ["[M"] = { query = "@function.outer", desc = "Prev method/function def end" },
-            ["[C"] = { query = "@class.outer", desc = "Prev class end" },
-            ["[I"] = { query = "@conditional.outer", desc = "Prev conditional end" },
-            ["[L"] = { query = "@loop.outer", desc = "Prev loop end" },
-          },
+        goto_previous_start = {
+          ["[f"] = "@call.outer",
+          ["[m"] = "@function.outer",
+          ["[c"] = "@class.outer",
+          ["[i"] = "@conditional.outer",
+          ["[l"] = "@loop.outer",
+        },
+        goto_previous_end = {
+          ["[F"] = "@call.outer",
+          ["[M"] = "@function.outer",
+          ["[C"] = "@class.outer",
+          ["[I"] = "@conditional.outer",
+          ["[L"] = "@loop.outer",
         },
       },
-    })
-  end,
+    },
+  },
+  keys = {
+    { "a=", select("@assignment.outer"), mode = { "x", "o" }, desc = "Select outer part of an assignment" },
+    { "i=", select("@assignment.inner"), mode = { "x", "o" }, desc = "Select inner part of an assignment" },
+    { "l=", select("@assignment.lhs"), mode = { "x", "o" }, desc = "Select left hand side of an assignment" },
+    { "r=", select("@assignment.rhs"), mode = { "x", "o" }, desc = "Select right hand side of an assignment" },
+
+    { "a:", select("@property.outer"), mode = { "x", "o" }, desc = "Select outer part of an object property" },
+    { "i:", select("@property.inner"), mode = { "x", "o" }, desc = "Select inner part of an object property" },
+    { "l:", select("@property.lhs"), mode = { "x", "o" }, desc = "Select left part of an object property" },
+    { "r:", select("@property.rhs"), mode = { "x", "o" }, desc = "Select right part of an object property" },
+
+    { "aa", select("@parameter.outer"), mode = { "x", "o" }, desc = "Select outer part of a parameter/argument" },
+    { "ia", select("@parameter.inner"), mode = { "x", "o" }, desc = "Select inner part of a parameter/argument" },
+    { "ai", select("@conditional.outer"), mode = { "x", "o" }, desc = "Select outer part of a conditional" },
+    { "ii", select("@conditional.inner"), mode = { "x", "o" }, desc = "Select inner part of a conditional" },
+    { "al", select("@loop.outer"), mode = { "x", "o" }, desc = "Select outer part of a loop" },
+    { "il", select("@loop.inner"), mode = { "x", "o" }, desc = "Select inner part of a loop" },
+    { "af", select("@call.outer"), mode = { "x", "o" }, desc = "Select outer part of a function call" },
+    { "if", select("@call.inner"), mode = { "x", "o" }, desc = "Select inner part of a function call" },
+    { "am", select("@function.outer"), mode = { "x", "o" }, desc = "Select outer part of a method/function definition" },
+    { "im", select("@function.inner"), mode = { "x", "o" }, desc = "Select inner part of a method/function definition" },
+    { "ac", select("@class.outer"), mode = { "x", "o" }, desc = "Select outer part of a class" },
+    { "ic", select("@class.inner"), mode = { "x", "o" }, desc = "Select inner part of a class" },
+
+    { "<leader>na", swap("swap_next", "@parameter.inner"), desc = "Swap parameter with next" },
+    { "<leader>n:", swap("swap_next", "@property.outer"), desc = "Swap object property with next" },
+    { "<leader>nm", swap("swap_next", "@function.outer"), desc = "Swap function with next" },
+    { "<leader>pa", swap("swap_previous", "@parameter.inner"), desc = "Swap parameter with previous" },
+    { "<leader>p:", swap("swap_previous", "@property.outer"), desc = "Swap object property with previous" },
+    { "<leader>pm", swap("swap_previous", "@function.outer"), desc = "Swap function with previous" },
+
+    -- LazyVim's move keys always read the "textobjects" group; these need other groups.
+    { "]s", move("goto_next_start", "@scope", "locals"), mode = { "n", "x", "o" }, desc = "Next scope" },
+    { "]z", move("goto_next_start", "@fold", "folds"), mode = { "n", "x", "o" }, desc = "Next fold" },
+  },
 }
