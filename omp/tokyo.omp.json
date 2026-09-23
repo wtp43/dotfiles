@@ -1,0 +1,87 @@
+{
+  "$schema": "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json",
+  "version": 4,
+  "final_space": true,
+  "palette": {
+    "os": "#7c808e",
+    "path": "#34353e",
+    "git": "#42444f",
+    "ink": "#1a1b20",
+    "green": "#c3ff00",
+    "red": "#d9527f",
+    "gold": "#fdc221",
+    "cyan": "#00d9c3",
+    "lavender": "#a6b0d8",
+    "pink": "#f4b8e4"
+  },
+  "blocks": [
+    {
+      "type": "prompt",
+      "alignment": "left",
+      "segments": [
+        {
+          "type": "text",
+          "style": "plain",
+          "foreground": "p:green",
+          "foreground_templates": [
+            "{{ if gt .Code 0 }}p:red{{ end }}"
+          ],
+          "template": " ╭─"
+        },
+        {
+          "type": "os",
+          "style": "diamond",
+          "trailing_diamond": "",
+          "background": "p:os",
+          "foreground": "p:ink",
+          "foreground_templates": [
+            "{{ if .Root }}p:red{{ end }}"
+          ],
+          "template": "  ",
+          "leading_diamond": ""
+        },
+        {
+          "type": "path",
+          "style": "diamond",
+          "leading_diamond": "<transparent,p:path></>",
+          "trailing_diamond": "",
+          "background": "p:path",
+          "foreground": "p:gold",
+          "options": {
+            "style": "full"
+          },
+          "template": " {{ .Path }} "
+        },
+        {
+          "type": "git",
+          "style": "diamond",
+          "leading_diamond": "<transparent,p:git></>",
+          "trailing_diamond": "",
+          "background": "p:git",
+          "foreground": "p:green",
+          "options": {
+            "fetch_status": true,
+            "branch_icon": " "
+          },
+          "template": " {{ .HEAD }}{{ if gt .Ahead 0 }}<p:lavender> ↑{{ .Ahead }}</>{{ end }}{{ if gt .Behind 0 }}<p:lavender> ↓{{ .Behind }}</>{{ end }}{{ if .Staging.Changed }}<p:cyan>  {{ .Staging.String }}</>{{ end }}{{ if and (.Working.Changed) (.Staging.Changed) }}<p:lavender> |</>{{ end }}{{ if .Working.Changed }}<p:gold>  {{ .Working.String }}</>{{ end }}{{ if gt .StashCount 0 }}<p:pink>  {{ .StashCount }}</>{{ end }} "
+        }
+      ]
+    },
+    {
+      "type": "prompt",
+      "alignment": "left",
+      "newline": true,
+      "segments": [
+        {
+          "type": "text",
+          "style": "plain",
+          "foreground": "p:green",
+          "foreground_templates": [
+            "{{ if gt .Code 0 }}p:red{{ end }}"
+          ],
+          "template": " ╰─"
+        }
+      ]
+    }
+  ]
+}
