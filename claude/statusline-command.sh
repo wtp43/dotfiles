@@ -7,25 +7,32 @@ green="\033[32m"
 teal="\033[36m"
 white="\033[38;2;220;220;220m"
 orange="\033[38;5;208m"
+warning="\033[38;2;255;193;7m"
 red="\033[31m"
 dim="\033[90m"
 reset="\033[0m"
 sep=" \033[1m${white}∣${reset} "
+dot=" ${white}·${reset} "
 
-# --- Percentage (colored by threshold) ---
+# --- Percentage with bar (colored by threshold) ---
 make_pct() {
-  local pct=$1
+  local pct=$1 width=8
   local color="$green"
   [ "$pct" -ge 60 ] && color="$orange"
   [ "$pct" -ge 85 ] && color="$red"
-  printf "${color}[%s%%]${reset}" "$pct"
+  local filled=$(( (pct * width + 50) / 100 ))
+  [ "$filled" -gt "$width" ] && filled=$width
+  local done_part="" todo_part="" i
+  for ((i = 0; i < width; i++)); do
+    [ "$i" -lt "$filled" ] && done_part+="🬋" || todo_part+="🬋"
+  done
+  printf "${color}%s${dim}%s${color} %s%%${reset}" "$done_part" "$todo_part" "$pct"
 }
 
 # --- Base info ---
 model=$(echo "$input" | jq -r '.model.display_name // "unknown"' | sed 's/^Claude //')
 session=$(echo "$input" | jq -r '.session_id // empty')
 session_name=$(echo "$input" | jq -r '.session_name // empty')
-project_dir=$(echo "$input" | jq -r '.workspace.project_dir // .cwd // empty')
 used_pct=$(echo "$input" | jq -r '.context_window.used_percentage // empty')
 cost=$(echo "$input" | jq -r '.cost.total_usd // empty')
 
@@ -34,9 +41,9 @@ branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null)
 if [ -n "$branch" ]; then
   dirty=$(git status --porcelain 2>/dev/null | wc -l | tr -d ' ')
   if [ "$dirty" -gt 0 ]; then
-    git_segment="${green}${branch}${reset} +${dirty}"
+    git_segment="${warning}${branch}${reset} +${dirty}"
   else
-    git_segment="${green}${branch}${reset}"
+    git_segment="${warning}${branch}${reset}"
   fi
 else
   git_segment=""
@@ -44,13 +51,13 @@ fi
 
 # --- Device ---
 host=$(hostname -s 2>/dev/null)
-device_segment="${white}󰒋${reset} \033[1m${teal}${host}${reset}"
+device_segment="${white}󰆦${reset} \033[1m${teal}${host}${reset}"
 
 # --- Context window ---
 if [ -n "$used_pct" ]; then
   pct=$(printf "%.0f" "$used_pct")
   context_pct=$(make_pct "$pct")
-  context_segment="${sep}ctx: ${context_pct}"
+  context_segment="${dot}ctx: ${context_pct}"
 else
   context_segment=""
 fi
@@ -142,23 +149,20 @@ if [ -f "$cache_file" ]; then
 
     five_pct_str=$(make_pct "$five_pct")
     seven_pct_str=$(make_pct "$seven_pct")
-    usage_segment="${sep}${five_label}: ${five_pct_str}${sep}${seven_label}: ${seven_pct_str}"
+    usage_segment="${dot}${five_label}: ${five_pct_str}${dot}${seven_label}: ${seven_pct_str}"
   fi
 fi
 
-# --- Line 1: device | dir git | model | cost ---
-line1="${device_segment}"
-dir_segment=""
-[ -n "$project_dir" ] && dir_segment="${green}${project_dir##*/}${reset}"
-section="${dir_segment}${dir_segment:+${git_segment:+ ${white}-${reset} }}${git_segment}"
-[ -n "$section" ] && line1="${line1}${sep}${section}"
-printf "%b${sep}${green}%s${reset}" "$line1" "$model"
+# --- Line 1: device | model | git | cost ---
+line1="${device_segment}${sep}${green}${model}${reset}"
+[ -n "$git_segment" ] && line1="${line1}${sep}${git_segment}"
+printf "%b" "$line1"
 printf "%b\n" "$cost_segment"
 
 # --- Line 2: session, context and usage ---
 session_label="${session_name:-$session}"
 line2=""
-[ -n "$session_label" ] && line2="${sep}✳ ${session_label}"
+[ -n "$session_label" ] && line2="${dot}✳ ${white}${session_label}${reset}"
 line2="${line2}${context_segment}${usage_segment}"
-line2="${line2#"$sep"}"
+line2="${line2#"$dot"}"
 [ -n "$line2" ] && printf "%b\n" "$line2"
