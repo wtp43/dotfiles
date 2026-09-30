@@ -5,6 +5,8 @@ macos-icon = blueprint
 # config in ghostty
 font-size=13
 font-family=MesloLGS Nerd Font Mono
+# Mono squeezes icons into one cell; take only the icons from the wider font.
+font-codepoint-map = U+E000-U+F8FF,U+F0000-U+FFFFD=MesloLGS Nerd Font
 # adjust-cell-width = "-2%"
 adjust-cell-height = 10%
 adjust-cursor-height = -25%
