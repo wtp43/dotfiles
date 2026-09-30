@@ -15,7 +15,7 @@ else
   [ "${psi:-0}" -ge 5 ] && mem_col=colour208
   [ "${psi:-0}" -ge 20 ] && mem_col=red
 fi
-out="RAM #[fg=$mem_col]$mem%#[default]"
+out=" #[fg=$mem_col]$mem%#[default]"
 
 bin=$(command -v tmux-mem-cpu-load)
 cpu=${bin:+$("$bin" -i "${1:-3}" -m 2 -g 0 -a 0 | tr -d '\000' | awk '{print $2}')}
@@ -24,7 +24,7 @@ if [ -n "$cpu" ]; then
   cpu_col=cyan
   [ "$pct" -ge 60 ] && cpu_col=colour208
   [ "$pct" -ge 85 ] && cpu_col=red
-  out="CPU #[fg=$cpu_col]$cpu#[default] ∣ $out"
+  out="󰉈 #[fg=$cpu_col]$pct%#[default] ∣ $out"
 fi
 
 echo "$out"
