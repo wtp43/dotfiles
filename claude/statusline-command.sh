@@ -44,7 +44,7 @@ fi
 
 # --- Device ---
 host=$(hostname -s 2>/dev/null)
-device_segment="${white}󰒋${reset} ${teal}${host}${reset}"
+device_segment="${white}󰒋${reset} \033[1m${teal}${host}${reset}"
 
 # --- Context window ---
 if [ -n "$used_pct" ]; then
