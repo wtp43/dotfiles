@@ -18,7 +18,7 @@ fi
 out="RAM #[fg=$mem_col]$mem%#[default]"
 
 bin=$(command -v tmux-mem-cpu-load)
-cpu=${bin:+$("$bin" -i "${1:-3}" -m 2 -g 0 -a 0 | awk '{print $2}')}
+cpu=${bin:+$("$bin" -i "${1:-3}" -m 2 -g 0 -a 0 | tr -d '\000' | awk '{print $2}')}
 if [ -n "$cpu" ]; then
   pct=$(printf '%.0f' "${cpu%\%}")
   cpu_col=cyan
