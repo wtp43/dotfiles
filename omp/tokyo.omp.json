@@ -35,11 +35,11 @@
         {
           "type": "path",
           "style": "plain",
-          "foreground": "p:blue",
+          "foreground": "p:cyan",
           "options": {
             "style": "full"
           },
-          "template": "<p:white>::</> {{ .Path }} "
+          "template": "{{ .Path }} "
         },
         {
           "type": "git",
@@ -47,9 +47,9 @@
           "foreground": "p:green",
           "options": {
             "fetch_status": true,
-            "branch_icon": " "
+            "branch_icon": ""
           },
-          "template": "<p:white>::</> {{ .HEAD }}{{ if gt .Ahead 0 }}<p:lavender> ↑{{ .Ahead }}</>{{ end }}{{ if gt .Behind 0 }}<p:lavender> ↓{{ .Behind }}</>{{ end }}{{ if .Staging.Changed }}<p:cyan>  {{ .Staging.String }}</>{{ end }}{{ if and (.Working.Changed) (.Staging.Changed) }}<p:lavender> |</>{{ end }}{{ if .Working.Changed }}<p:gold>  {{ .Working.String }}</>{{ end }}{{ if gt .StashCount 0 }}<p:pink>  {{ .StashCount }}</>{{ end }} "
+          "template": "<p:white>-</> {{ .HEAD }}{{ if gt .Ahead 0 }}<p:lavender> ↑{{ .Ahead }}</>{{ end }}{{ if gt .Behind 0 }}<p:lavender> ↓{{ .Behind }}</>{{ end }}{{ if .Staging.Changed }}<p:cyan>  {{ .Staging.String }}</>{{ end }}{{ if and (.Working.Changed) (.Staging.Changed) }}<p:lavender> |</>{{ end }}{{ if .Working.Changed }}<p:gold>  {{ .Working.String }}</>{{ end }}{{ if gt .StashCount 0 }}<p:pink>  {{ .StashCount }}</>{{ end }} "
         }
       ]
     },
