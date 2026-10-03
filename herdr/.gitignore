@@ -1,0 +1,9 @@
+# Runtime state herdr writes next to config.toml
+*.log
+*.sock
+*.sock.agent
+.plugins.lock
+plugins.json
+plugins/
+session.json
+session-snapshots/
