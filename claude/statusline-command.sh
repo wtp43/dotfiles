@@ -162,7 +162,9 @@ printf "%b\n" "$cost_segment"
 # --- Line 2: session, context and usage ---
 session_label="${session_name:-$session}"
 line2=""
-[ -n "$session_label" ] && line2="${dot}✳ ${white}${session_label}${reset}"
+# Not ✳: herdr reads a line starting with Claude's spinner glyphs and cut off
+# with "…" as a live turn, so the agent would never look idle.
+[ -n "$session_label" ] && line2="${dot}✦ ${white}${session_label}${reset}"
 line2="${line2}${context_segment}${usage_segment}"
 line2="${line2#"$dot"}"
 [ -n "$line2" ] && printf "%b\n" "$line2"
