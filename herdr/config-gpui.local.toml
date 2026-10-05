@@ -1,6 +1,21 @@
 # Herdr GPUI overrides. Saved changes reload automatically.
 # Unset keys inherit config-gpui.toml; tables merge key by key.
 
+# Same colors as Ghostty, read straight from its theme file.
+theme = "~/.config/ghostty/themes/my-theme"
+show_system_load = false
+
 # New installs start with the roomy rounded sidebar. Remove this line for
 # the managed default, or pick another layout listed in config-gpui.toml.
-layout = "comfortable-rounded"
+[layout]
+mode = "comfortable"
+sidebar_gap = 0.0
+
+[terminal]
+size = 19.0
+
+[sidebar]
+size = 14.0
+
+[tabs]
+size = 12.0

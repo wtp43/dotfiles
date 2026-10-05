@@ -46,6 +46,7 @@ if [ -n "$branch" ]; then
   else
     git_segment="${warning}${branch}${reset}"
   fi
+  git_segment="${dim}[${reset}${git_segment}${dim}]${reset}"
 else
   git_segment=""
 fi
@@ -163,9 +164,10 @@ printf "%b\n" "$cost_segment"
 # --- Line 2: session, context and usage ---
 session_label="${session_name:-$session}"
 line2=""
-# Not ✳: herdr reads a line starting with Claude's spinner glyphs and cut off
-# with "…" as a live turn, so the agent would never look idle.
-[ -n "$session_label" ] && line2="${dot}✦ ${white}${session_label}${reset}"
+# U+FE0E after ✳: herdr reads a line starting with a Claude spinner glyph plus
+# whitespace and cut off with "…" as a live turn, so the agent would never look
+# idle. The invisible selector keeps the glyph but breaks that match.
+[ -n "$session_label" ] && line2="${dot}✳\xef\xb8\x8e ${white}${session_label}${reset}"
 line2="${line2}${context_segment}${usage_segment}"
 line2="${line2#"$dot"}"
 [ -n "$line2" ] && printf "%b\n" "$line2"
