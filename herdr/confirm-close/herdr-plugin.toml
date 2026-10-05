@@ -32,3 +32,11 @@ placement = "popup"
 width = 60
 height = 6
 command = ["bash", "confirm-close.sh", "tab"]
+
+[[events]]
+on = "tab.closed"
+command = ["bash", "confirm-close.sh", "recover"]
+
+[[events]]
+on = "pane.closed"
+command = ["bash", "confirm-close.sh", "recover"]
