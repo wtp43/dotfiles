@@ -1,0 +1,20 @@
+id = "wt.last-workspace"
+name = "Last workspace"
+version = "0.1.0"
+min_herdr_version = "0.9.3"
+description = "Jump back to the previously focused workspace, like tmux switch-client -l"
+platforms = ["macos", "linux"]
+
+# Herdr has no last-workspace action, so focus changes are recorded here and a
+# keybinding runs the back action.
+[[actions]]
+id = "back"
+title = "Last workspace"
+command = ["bash", "last-workspace.sh", "back"]
+
+[[startup]]
+command = ["bash", "last-workspace.sh", "record"]
+
+[[events]]
+on = "workspace.focused"
+command = ["bash", "last-workspace.sh", "record"]
