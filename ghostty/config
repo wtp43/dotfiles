@@ -45,7 +45,6 @@ keybind = ctrl+cmd+r=reload_config
 keybind = ctrl+a>i=increase_font_size:1
 keybind = ctrl+a>u=decrease_font_size:1
 
-keybind = ctrl+a>t=toggle_quick_terminal
 
 
 
