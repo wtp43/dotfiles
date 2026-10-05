@@ -11,7 +11,7 @@ PATH=$PATH:/opt/homebrew/bin  # jq, if the server started without a login PATH
 
 cmd=$("$herdr" pane process-info --pane "$src" | jq -r '
   .result.process_info.foreground_processes[]
-  | select(.argv0 | test("^(.*/)?(ssh|autossh|mosh[^/]*)$")) | .cmdline' | head -1)
+  | select((.argv0 // "") | test("^(.*/)?(ssh|autossh|mosh[^/]*)$")) | .cmdline' | head -1)
 
 case $dir in
   left|right) split=right ;;

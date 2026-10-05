@@ -10,7 +10,7 @@ PATH=$PATH:/opt/homebrew/bin  # jq, if the server started without a login PATH
 
 if "$herdr" pane process-info --pane "$pane" | jq -e '
   any(.result.process_info.foreground_processes[];
-      .argv0 | test("^(.*/)?(g?view|l?n?vim?x?|fzf)(diff)?$"))' >/dev/null; then
+      (.argv0 // "") | test("^(.*/)?(g?view|l?n?vim?x?|fzf)(diff)?$"))' >/dev/null; then
   exec "$herdr" pane send-keys "$pane" "$key" >/dev/null
 fi
 exec "$herdr" pane focus --pane "$pane" --direction "$dir" >/dev/null
