@@ -1,0 +1,34 @@
+id = "wt.confirm-close"
+name = "Confirm close"
+version = "0.1.0"
+min_herdr_version = "0.9.3"
+description = "Ask y/N before closing a pane or tab"
+platforms = ["macos", "linux"]
+
+# Keybindings run the actions, which open the popups. A plugin popup takes its
+# border label from title; "─" blends into the border instead of "popup".
+[[actions]]
+id = "pane"
+title = "Close pane (confirm)"
+command = ["bash", "confirm-close.sh", "open", "pane"]
+
+[[actions]]
+id = "tab"
+title = "Close tab (confirm)"
+command = ["bash", "confirm-close.sh", "open", "tab"]
+
+[[panes]]
+id = "pane"
+title = "─"
+placement = "popup"
+width = 60
+height = 6
+command = ["bash", "confirm-close.sh", "pane"]
+
+[[panes]]
+id = "tab"
+title = "─"
+placement = "popup"
+width = 60
+height = 6
+command = ["bash", "confirm-close.sh", "tab"]

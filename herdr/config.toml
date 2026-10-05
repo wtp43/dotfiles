@@ -19,6 +19,8 @@ pane_outer_borders = false
 pane_gaps = false
 pane_scrollbars = false
 
+prompt_new_tab_name = false
+
 # The tab row stands in for the tmux status line: tabs as the window list on
 # the left, the tmux status items on the right (see status.sh).
 tab_bar_position = "bottom"
@@ -46,8 +48,13 @@ prefix = "ctrl+a"
 previous_tab = ["prefix+p", "ctrl+left"]
 next_tab = ["prefix+n", "ctrl+right"]
 
-# tmux prefix+Tab: switch-client -n (displaces herdr's prefix+tab pane cycling)
-next_workspace = "prefix+tab"
+new_workspace = "prefix+c"
+new_tab = "prefix+t"
+close_tab = ""
+close_pane = ""
+
+# tmux prefix+Tab: switch-client -l (displaces herdr's prefix+tab pane cycling)
+last_pane = "prefix+tab"
 cycle_pane_next = ""
 
 # tmux prefix+arrows: resize (prefix+r still enters repeatable resize mode)
@@ -112,3 +119,16 @@ key = "prefix+l"
 type = "shell"
 command = "~/.config/herdr/split-same.sh right"
 description = "split right"
+
+# Herdr only confirms closing a workspace; these go through the confirm-close plugin.
+[[keys.command]]
+key = "prefix+x"
+type = "plugin_action"
+command = "wt.confirm-close.pane"
+description = "close pane (confirm)"
+
+[[keys.command]]
+key = "prefix+shift+x"
+type = "plugin_action"
+command = "wt.confirm-close.tab"
+description = "close tab (confirm)"
