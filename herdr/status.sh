@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Tab bar status entries (tab_bar_right in config.toml), ported from the tmux
 # status line. Herdr strips colors, so tmux #[...] styles are removed.
-# Usage: status.sh host|local|workspace|title|remote
+# Usage: status.sh host|local|workspace|remote
 PATH=$PATH:/opt/homebrew/bin
 export LC_ALL=en_US.UTF-8
 herdr=${HERDR_BIN_PATH:-herdr}
@@ -31,11 +31,6 @@ ssh_host() {
 }
 
 case $1 in
-  title)
-    t=$("$herdr" pane get "$pane" | jq -r '.result.pane.terminal_title_stripped // empty')
-    # A long title would make herdr drop the whole status area.
-    [ ${#t} -gt 40 ] && t="${t:0:39}…"
-    echo "$t" ;;
   host)
     h=$(ssh_host "$(ssh_cmd)")
     echo "󰙴 󰆦 ${h:-$(hostname -s)} $(date +%-I:%M%p)" ;;

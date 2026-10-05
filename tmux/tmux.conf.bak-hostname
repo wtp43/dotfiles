@@ -2,8 +2,6 @@
 set -sa terminal-overrides ',xterm-256:RGB,*:Se=\033[6 q'
 # set -ga terminal-overrides ',tmux-256color:Tc,*:Se=\033[6 q'
 set -ga terminal-overrides ",xterm-256color:Tc"
-# Termius (xterm-256color): writing the bottom-right cell scrolls the screen, stacking old status bars.
-set -ga terminal-overrides ',xterm-256color:am@'
 set -g prefix C-a
 unbind C-b
 bind-key C-a send-prefix
@@ -17,7 +15,6 @@ bind-key C-a send-prefix
 # Shift arrow to switch windows
 bind -n C-Left  previous-window
 bind -n C-Right next-window
-bind Tab switch-client -n
 
 unbind r
 bind r source-file ~/.tmux.conf
@@ -78,12 +75,7 @@ bind l split-window -h  -c "#{pane_current_path}"   # right
 set-environment -g TMUX_PLUGIN_MANAGER_PATH '~/.tmux/plugins/'
 set -g status-interval 3
 set -g status-left-length 200
-# Machine the active pane is on. In an ssh/mosh pane: the host the remote shell
-# reports via OSC 7 (zshrc's _osc7_cwd), else the ssh alias (pane-host.sh).
-# The regex avoids ':' and '/', which end the s/// modifier early.
-set -g @pane_osc7_host '#{s/^file...([A-Za-z0-9._-]*).*/\1/:pane_path}'
-set -g @pane_host '#{?#{m/r:^(ssh|autossh|mosh.*)$,#{pane_current_command}},#{?#{&&:#{E:@pane_osc7_host},#{!=:#{E:@pane_osc7_host},#{host_short}}},#{E:@pane_osc7_host},#(~/.config/tmux/pane-host.sh #{pane_id} #{pane_pid})},#{host_short}}'
-set -g status-left ' #[fg=#f5a800]󰙴#[default] 󰆦 #[fg=green]#{host_short}#[default] %-I:%M%p ∣ #(~/.config/tmux/mem-cpu.sh 3) ∣ #[fg=cyan]#{session_name}#[default] ∣ #[fg=#ffffff]#{pane_title}#[default] '
+set -g status-left ' #[fg=#f5a800]#[default] #[fg=green]#{session_name}#[default] 󰒋 #[fg=green]#h#[default] %-I:%M %p ∣ #(~/.config/tmux/mem-cpu.sh 3) ∣ #[fg=green]#{pane_title}#[default] '
 set -g status-right-length 150
 set -g status-format[0] '#[align=left range=left #{E:status-left-style}]#[push-default]#{T;=/#{status-left-length}:status-left}#[pop-default]#[norange default]#[nolist align=right range=right #{E:status-right-style}]#[push-default]#{T;=/#{status-right-length}:status-right}#[pop-default]#[norange default]'
 set -g @pane_label '#{?#{m/r:^[0-9]+[.][0-9]+[.][0-9]+$,#{pane_current_command}},claude,#{pane_current_command}}'
@@ -95,7 +87,7 @@ set -g pane-active-border-style '#{?pane_in_mode,fg=yellow,#{?synchronize-panes,
 set -g pane-border-status bottom
 set -g pane-border-format '#{?pane_active,#[fg=#0a84ff]#{R:━,#{e|-:#{pane_width},#{?pane_at_right,4,3}}}#[default],}'
 # Must stay before tpm: tmux-continuum prepends its autosave hook to status-right at load.
-set -g status-right '#{?window_bigger,[#{window_offset_x}#,#{window_offset_y}] ,}#{?#{m/r:^(ssh|autossh|mosh.*)$,#{pane_current_command}},#(~/.config/tmux/remote-mem-cpu.sh #{pane_id} #{pane_pid}),}#{W:#{?window_active,#[fg=#0a84ff],}#{window_index}#[default]#{?loop_last_flag,, }} ∣ %b %d '
+set -g status-right '#{?window_bigger,[#{window_offset_x}#,#{window_offset_y}] ,}%b %d '
 # Initialize TMUX plugin manager (keep this line at the very bottom of tmux.conf)
 run '~/.tmux/plugins/tpm/tpm'
 
@@ -114,10 +106,7 @@ set -g set-titles on
 set -g set-titles-string '#T'
 
 set -g status-style 'bg=#3a3a3a,fg=#ffffff,bold'
-set -g message-style 'bg=#3a3a3a,fg=#ffffff,bold,fill=#3a3a3a'
-# Messages render after the pane title instead of over the status bar.
-set -g message-format '#{?#{command_prompt},#[#{E:message-command-style}]#{message},#[#{E:message-style}]#{T:status-left}∣ #[fg=yellow bold]#{message}}'
-set -g display-time 2000
+set -g message-style 'bg=#3a3a3a,fg=#ffffff'
 set -g mode-style 'bg=#0a84ff,fg=#ffffff'
 
 
@@ -132,9 +121,3 @@ bind h run-shell '~/.config/tmux/split-same.sh #{pane_id} #{pane_pid} "#{pane_cu
 bind j run-shell '~/.config/tmux/split-same.sh #{pane_id} #{pane_pid} "#{pane_current_path}" "#{pane_path}" -v'
 bind k run-shell '~/.config/tmux/split-same.sh #{pane_id} #{pane_pid} "#{pane_current_path}" "#{pane_path}" -vb'
 bind l run-shell '~/.config/tmux/split-same.sh #{pane_id} #{pane_pid} "#{pane_current_path}" "#{pane_path}" -h'
-# Mouse drag only selects; press y (or Enter) to copy.
-bind -T copy-mode-vi MouseDragEnd1Pane send -X stop-selection
-bind -T copy-mode    MouseDragEnd1Pane send -X stop-selection
-# prefix+w: window rows list every pane's title, not just single-pane windows.
-set -g @tree_format '#{?pane_format,#{pane_current_command}#{?pane_active,*,}: "#{pane_title}",#{?window_format,#{window_name}#{window_flags}: #{P:"#{pane_title}"#{?loop_last_flag,, ∣ }},#{session_windows} windows#{?session_attached, (attached),}}}'
-bind w choose-tree -Zw -F '#{E:@tree_format}'

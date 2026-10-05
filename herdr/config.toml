@@ -1,21 +1,29 @@
 onboarding = false
 
 [theme]
-# Neutral grays like the tmux look; inactive borders use its #5c5c5c (tmux #5a5a5a).
-name = "vesper"
+# Ghostty's ANSI colors: inactive tabs draw on the terminal background, so they
+# read as plain numbers, and tab/status text is light enough to read.
+name = "terminal"
 auto_switch = false
 
 [theme.custom]
-panel_bg = "#3a3a3a" # tab bar, as tmux status-style
-accent = "#0a84ff"   # focused pane border and active tab
+# reset = terminal background for the tab bar. surface_dim then colors both the
+# active tab's text and the sidebar dividers; Ghostty's background hides the
+# dividers (white text on the active tab would make them white too).
+panel_bg = "reset"
+surface_dim = "#1a1b21"
+accent = "#5abfb5"      # focused pane border and active tab (my-theme's bright cyan)
 
 [ui]
 # Herdr has no minimum-drag threshold, so a stray click-drag would clobber the
 # clipboard. Copy with y/Enter in copy mode (prefix+[) or ctrl+c / cmd+c.
 copy_on_select = false
 
-# tmux-style splitters: no outer frame, panes share dividers, no scrollbars.
-pane_outer_borders = false
+# Frame every pane, focused one in the accent color. Neighbours share one
+# divider (pane_gaps = true would draw two side by side); a shared divider
+# touches both panes, so it stays highlighted whichever side has focus.
+pane_borders = "always"
+pane_outer_borders = true
 pane_gaps = false
 pane_scrollbars = false
 
@@ -31,7 +39,6 @@ tab_bar_right = [
   { type = "command", command = "~/.config/herdr/status.sh host", interval_seconds = 2, timeout_seconds = 2 },
   { type = "command", command = "~/.config/herdr/status.sh local", interval_seconds = 3, timeout_seconds = 5 },
   { type = "command", command = "~/.config/herdr/status.sh workspace", interval_seconds = 2, timeout_seconds = 2 },
-  { type = "command", command = "~/.config/herdr/status.sh title", interval_seconds = 1, timeout_seconds = 2 },
   { type = "command", command = "~/.config/herdr/status.sh remote", interval_seconds = 3, timeout_seconds = 6 },
   { type = "datetime", format = "%b %d" },
 ]

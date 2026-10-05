@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# Split a pane; if it runs ssh/mosh, the new pane opens the same connection,
+# in the remote cwd when the remote shell reports it (OSC 7 -> #{pane_path}).
+# pgrep -P + ps -p instead of ps --ppid, which BSD/macOS ps lacks.
+pane=$1 pid=$2 path=$3 osc7=$4; shift 4
+cmd=
+for c in $(pgrep -P "$pid"); do
+  args=$(ps -o args= -p "$c")
+  if [[ $args =~ ^(ssh|mosh|autossh)( |$) ]]; then cmd=$args; break; fi
+done
+if [ -z "$cmd" ]; then
+  exec tmux split-window -t "$pane" "$@" -c "$path"
+fi
+# Assumes the ssh line has no remote command of its own; one would take ours
+# as extra arguments.
+if [[ $cmd =~ ^ssh( |$) && $osc7 == file://* ]]; then
+  dir=/${osc7#file://*/}
+  dir=$(printf '%b' "${dir//%/\\x}")
+  remote="cd $(printf '%q' "$dir") 2>/dev/null; exec \$SHELL -l"
+  cmd="ssh -t ${cmd#ssh } $(printf '%q' "$remote")"
+fi
+exec tmux split-window -t "$pane" "$@" "$cmd"

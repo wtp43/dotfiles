@@ -4,17 +4,18 @@
   "final_space": true,
   "console_title_template": "{{ .PWD }}",
   "palette": {
-    "gray": "#7c808e",
+    "os": "#7c808e",
     "path": "#34353e",
     "git": "#34353e",
     "ink": "#1a1b20",
     "green": "#c3ff00",
-    "red": "#c70536",
+    "red": "#d9527f",
     "gold": "#fdc221",
     "cyan": "#00d9c3",
     "lavender": "#a6b0d8",
     "pink": "#f4b8e4",
     "blue": "#5fd3d6",
+    "bolt": "#f5a800",
     "white": "#ffffff"
   },
   "blocks": [
@@ -25,30 +26,30 @@
         {
           "type": "os",
           "style": "plain",
-          "foreground": "p:cyan",
+          "foreground": "p:green",
           "foreground_templates": [
             "{{ if .Root }}p:red{{ end }}"
           ],
-          "template": " <p:white>󰆦</> <b>{{ .HostName }}</b> <p:white><b>∣</b></> "
+          "template": " <p:bolt></> <b>{{ .HostName }}</b> "
         },
         {
           "type": "path",
           "style": "plain",
-          "foreground": "p:green",
+          "foreground": "p:blue",
           "options": {
             "style": "full"
           },
-          "template": "{{ .Path }} "
+          "template": "<p:white>::</> {{ .Path }} "
         },
         {
           "type": "git",
           "style": "plain",
-          "foreground": "p:white",
+          "foreground": "p:green",
           "options": {
             "fetch_status": true,
-            "branch_icon": ""
+            "branch_icon": " "
           },
-          "template": "<p:gray>[</>{{ .HEAD }}{{ if gt .Ahead 0 }}<p:lavender> ↑{{ .Ahead }}</>{{ end }}{{ if gt .Behind 0 }}<p:lavender> ↓{{ .Behind }}</>{{ end }}{{ if .Staging.Changed }}<p:cyan>  {{ .Staging.String }}</>{{ end }}{{ if and (.Working.Changed) (.Staging.Changed) }}<p:lavender> |</>{{ end }}{{ if .Working.Changed }}<p:gold>  {{ .Working.String }}</>{{ end }}{{ if gt .StashCount 0 }}<p:pink>  {{ .StashCount }}</>{{ end }}<p:gray>]</> "
+          "template": "<p:white>::</> {{ .HEAD }}{{ if gt .Ahead 0 }}<p:lavender> ↑{{ .Ahead }}</>{{ end }}{{ if gt .Behind 0 }}<p:lavender> ↓{{ .Behind }}</>{{ end }}{{ if .Staging.Changed }}<p:cyan>  {{ .Staging.String }}</>{{ end }}{{ if and (.Working.Changed) (.Staging.Changed) }}<p:lavender> |</>{{ end }}{{ if .Working.Changed }}<p:gold>  {{ .Working.String }}</>{{ end }}{{ if gt .StashCount 0 }}<p:pink>  {{ .StashCount }}</>{{ end }} "
         }
       ]
     },
@@ -64,7 +65,7 @@
           "foreground_templates": [
             "{{ if gt .Code 0 }}p:red{{ end }}"
           ],
-          "template": " ›"
+          "template": " "
         }
       ]
     }
