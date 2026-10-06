@@ -5,7 +5,16 @@
 vim.g.maplocalleader = ","
 vim.opt.clipboard = "unnamedplus"
 if vim.env.SSH_TTY then
-  vim.g.clipboard = "osc52"
+  -- OSC 52 paste waits for a terminal reply that may never come; reads of + then time out.
+  local osc52 = require("vim.ui.clipboard.osc52")
+  local function paste()
+    return { vim.split(vim.fn.getreg('"'), "\n"), vim.fn.getregtype('"') }
+  end
+  vim.g.clipboard = {
+    name = "OSC 52 copy-only",
+    copy = { ["+"] = osc52.copy("+"), ["*"] = osc52.copy("*") },
+    paste = { ["+"] = paste, ["*"] = paste },
+  }
 end
 vim.go.background = "dark"
 vim.opt.wrap = true
