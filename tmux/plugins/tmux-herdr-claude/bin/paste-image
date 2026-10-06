@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+# tmux ctrl+v: in a pane connected over ssh, with an image on the Mac clipboard,
+# upload the image to that machine and paste its path, which Claude Code turns
+# into an image attachment; otherwise send ctrl+v through unchanged.
+# Usage: paste-image <pane_id> <pane_pid>   (bound in herdr-claude.tmux)
+pane=$1 pid=$2
+
+passthrough() { tmux send-keys -t "$pane" C-v; exit 0; }
+
+[ "$(uname)" = Darwin ] || passthrough
+host=$(~/.config/tmux/pane-host.sh "$pane" "$pid")
+[ -n "$host" ] && [ "$host" != "$(hostname -s)" ] || passthrough
+osascript -e 'clipboard info' 2>/dev/null | grep -qE 'PNGf|TIFF' || passthrough
+
+tmp=$(mktemp "${TMPDIR:-/tmp}/claude-clip.XXXXXX")
+trap 'rm -f "$tmp"' EXIT
+osascript -e "set f to open for access POSIX file \"$tmp\" with write permission" \
+  -e 'set eof f to 0' -e 'write (the clipboard as «class PNGf») to f' -e 'close access f' \
+  >/dev/null 2>&1 || passthrough
+
+# Day-old uploads are pruned on each paste.
+remote=$(ssh -o BatchMode=yes -o ConnectTimeout=5 "$host" \
+  'd=$HOME/.cache/claude-clip; mkdir -p "$d"; find "$d" -name "*.png" -mmin +1440 -delete 2>/dev/null
+   f=$d/clip-$(date +%Y%m%d-%H%M%S)-$$.png; cat >"$f" && echo "$f"' <"$tmp")
+[ -n "$remote" ] || { tmux display-message "paste-image: upload to $host failed"; exit 0; }
+
+# -p: bracketed, so Claude Code sees a paste rather than typed keys.
+tmux set-buffer -b claude-clip "$remote"
+tmux paste-buffer -p -d -b claude-clip -t "$pane"

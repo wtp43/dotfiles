@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# Pick a Claude Code session running in herdr and attach it to this terminal,
+# taking input over from any other attach. ctrl+b q detaches again.
+# Usage: cattach [query]   - with one match, attaches without asking
+herdr=${HERDR_BIN_PATH:-herdr}
+
+sessions=$("$herdr" api snapshot | jq -r '.result.snapshot as $s
+  | ($s.workspaces | map({key: .workspace_id, value: .label}) | from_entries) as $ws
+  | ($s.tabs | map({key: .tab_id, value: .label}) | from_entries) as $tabs
+  | $s.agents[] | select(.agent == "claude")
+  | [.terminal_id, .agent_status, $ws[.workspace_id], $tabs[.tab_id], (.terminal_title_stripped // "")]
+  | @tsv') || exit 1
+[ -n "$sessions" ] || { echo "cattach: no Claude Code sessions in herdr" >&2; exit 1; }
+
+terminal=$(column -t -s $'\t' <<<"$sessions" |
+  fzf --with-nth 2.. --select-1 --exit-0 --query "$*" --prompt 'claude> ' | awk '{print $1}')
+[ -n "$terminal" ] && exec "$herdr" terminal attach "$terminal" --takeover

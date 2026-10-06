@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+# Stand-in wl-copy for Claude Code started by herdr-claude over ssh (see
+# shell/herdr-claude.zsh): the copy reaches the ssh client's terminal as OSC 52.
+# herdr forwards a pane's own OSC 52 only to a full herdr window, never to a
+# `herdr terminal attach`, so this writes it to the attach's terminal directly.
+for arg; do
+  case $arg in -p|--primary) cat >/dev/null; exit 0 ;; esac
+done
+PATH=$PATH:/opt/homebrew/bin
+herdr=${HERDR_BIN_PATH:-herdr}
+seq=$(printf '\033]52;c;%s\a' "$(base64 -w0)")
+
+sent=
+term=$("$herdr" api snapshot 2>/dev/null |
+  jq -r --arg p "${HERDR_PANE_ID:-}" '.result.snapshot.panes[] | select(.pane_id == $p) | .terminal_id')
+if [ -n "$term" ]; then
+  for pid in $(pgrep -u "$(id -u)" -f "terminal attach $term"); do
+    tty=$(readlink "/proc/$pid/fd/1")
+    [[ $tty == /dev/pts/* && -w $tty ]] && printf '%s' "$seq" >"$tty" && sent=1
+  done
+fi
+# Not attached (viewed in a herdr window): herdr forwards this one there.
+[ -n "$sent" ] || printf '%s' "$seq" >/dev/tty

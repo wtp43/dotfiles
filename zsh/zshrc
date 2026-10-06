@@ -236,3 +236,7 @@ if [[ -n $HERDR_ENV ]]; then
   unset GHOSTTY_RESOURCES_DIR GHOSTTY_BIN_DIR GHOSTTY_SHELL_FEATURES GHOSTTY_SURFACE_ID
   [[ $TERMINFO == */Ghostty.app/* ]] && unset TERMINFO
 fi
+
+# claude in tmux runs in herdr while the tmux-herdr-claude plugin is loaded.
+[[ -f ~/.config/tmux/plugins/tmux-herdr-claude/shell/herdr-claude.zsh ]] &&
+  source ~/.config/tmux/plugins/tmux-herdr-claude/shell/herdr-claude.zsh
