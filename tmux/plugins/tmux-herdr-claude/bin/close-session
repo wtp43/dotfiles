@@ -9,10 +9,10 @@ herdr=${HERDR_BIN_PATH:-herdr}
 case $1 in
   --terminal) terminal=$2 ;;
   --ssh-client-port)
-    for pid in $(pgrep -f '[h]erdr terminal attach'); do
+    for pid in $(pgrep -f '[h]erdr terminal attach|[a]ttach-terminal '); do
       read -r _ port _ < <(tr '\0' '\n' <"/proc/$pid/environ" 2>/dev/null | sed -n 's/^SSH_CONNECTION=//p')
-      if [ "$port" = "$2" ] && [[ $(ps -o args= -p "$pid") =~ terminal\ attach\ ([^ ]+) ]]; then
-        terminal=${BASH_REMATCH[1]}
+      if [ "$port" = "$2" ] && [[ $(ps -o args= -p "$pid") =~ (terminal\ attach|attach-terminal)\ ([^ ]+) ]]; then
+        terminal=${BASH_REMATCH[2]}
         break
       fi
     done ;;

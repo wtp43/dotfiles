@@ -97,7 +97,8 @@ def main():
         created = call("tab.create", {"workspace_id": workspace, "cwd": cwd, "focus": False, "env": env})
     else:
         created = call("workspace.create", {"cwd": cwd, "label": os.path.basename(root), "focus": False, "env": env})
-    os.execvp("herdr", ["herdr", "terminal", "attach", created["root_pane"]["terminal_id"]])
+    attach = os.path.join(os.path.dirname(os.path.realpath(__file__)), "attach-terminal")
+    os.execv(attach, [attach, created["root_pane"]["terminal_id"]])
 
 
 if __name__ == "__main__":

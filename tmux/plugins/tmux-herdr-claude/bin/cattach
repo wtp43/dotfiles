@@ -14,4 +14,4 @@ sessions=$("$herdr" api snapshot | jq -r '.result.snapshot as $s
 
 terminal=$(column -t -s $'\t' <<<"$sessions" |
   fzf --with-nth 2.. --select-1 --exit-0 --query "$*" --prompt 'claude> ' | awk '{print $1}')
-[ -n "$terminal" ] && exec "$herdr" terminal attach "$terminal" --takeover
+[ -n "$terminal" ] && exec "$(dirname "$0")/attach-terminal" "$terminal" --takeover

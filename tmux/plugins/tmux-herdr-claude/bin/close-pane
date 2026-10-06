@@ -15,8 +15,8 @@ descendants() {
 terminal= ssh_pid=
 for p in $(descendants "$pid"); do
   args=$(ps -o args= -p "$p")
-  if [[ $args =~ (^|/)herdr\ terminal\ attach\ ([^ ]+) ]]; then
-    terminal=${BASH_REMATCH[2]}
+  if [[ $args =~ (^|/)(herdr\ terminal\ attach|attach-terminal)\ ([^ ]+) ]]; then
+    terminal=${BASH_REMATCH[3]}
   elif [[ $args =~ ^ssh\  ]]; then
     ssh_pid=$p
   fi
