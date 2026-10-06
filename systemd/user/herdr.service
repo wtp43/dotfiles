@@ -1,0 +1,15 @@
+[Unit]
+Description=herdr server
+After=network-online.target
+
+[Service]
+Type=simple
+Environment=PATH=%h/.local/bin:%h/.local/share/fnm/aliases/default/bin:/usr/local/bin:/usr/bin:/bin
+WorkingDirectory=%h
+ExecStart=%h/.local/bin/herdr server
+ExecStop=%h/.local/bin/herdr server stop
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=default.target

@@ -7,3 +7,7 @@ plugins.json
 plugins/
 session.json
 session-snapshots/
+
+# Herdr GPUI rewrites its managed defaults; settings live in config-gpui.local.toml
+config-gpui.toml
+config-gpui.lock
