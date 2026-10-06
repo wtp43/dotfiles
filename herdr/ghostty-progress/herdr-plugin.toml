@@ -6,7 +6,9 @@ description = "Show Ghostty's progress bar while an agent in the focused tab is 
 platforms = ["macos", "linux"]
 
 # Herdr consumes agents' OSC 9;4 progress instead of passing it through, so
-# re-emit it to the outer terminal from agent state. progress.sh starts a
+# re-emit it to the outer terminal from agent state. Claude Code's
+# progress-keepalive hook doesn't replace this: its bar never leaves herdr.
+# progress.sh starts a
 # refresher loop; these hooks make focus and state changes show immediately.
 [[startup]]
 command = ["bash", "progress.sh", "sync"]
