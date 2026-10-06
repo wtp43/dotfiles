@@ -228,3 +228,11 @@ _osc7_cwd() {
   print -n "\e]7;file://${HOST%%.*}$url\a"
 }
 add-zsh-hook precmd _osc7_cwd
+
+# The local herdr server was first started from Ghostty, so its panes inherit
+# Ghostty's variables and programs in them take herdr for Ghostty; drop them so
+# panes look like they do on remote machines.
+if [[ -n $HERDR_ENV ]]; then
+  unset GHOSTTY_RESOURCES_DIR GHOSTTY_BIN_DIR GHOSTTY_SHELL_FEATURES GHOSTTY_SURFACE_ID
+  [[ $TERMINFO == */Ghostty.app/* ]] && unset TERMINFO
+fi
