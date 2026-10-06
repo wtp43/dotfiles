@@ -29,7 +29,16 @@
           "foreground_templates": [
             "{{ if .Root }}p:red{{ end }}"
           ],
-          "template": " <p:white>󰆦</> <b>{{ .HostName }}</b> <p:white><b>∣</b></> "
+          "template": " <p:white>󰆦</> <b>{{ .HostName }}</b> "
+        },
+        {
+          "type": "git",
+          "alias": "Repo",
+          "style": "plain",
+          "options": {
+            "fetch_upstream_icon": true
+          },
+          "template": "{{ if contains \"github.com\" .UpstreamURL }}<p:white></>{{ else }}<p:white><b>∣</b></>{{ end }} "
         },
         {
           "type": "path",
@@ -38,7 +47,7 @@
           "options": {
             "style": "full"
           },
-          "template": "{{ .Path }} "
+          "template": "{{ if not (.Segments.Contains \"Repo\") }}<p:white><b>∣</b></> {{ end }}{{ .Path }} "
         },
         {
           "type": "git",
