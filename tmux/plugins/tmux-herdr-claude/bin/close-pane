@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+# tmux prefix x: kill the pane, and if it showed a herdr Claude Code session
+# (a local `herdr terminal attach`, or one inside an ssh session) close that
+# session's herdr tab too. Detaching (ctrl+b q) or a dropped connection keep it.
+# Usage: close-pane <pane_id> <pane_pid>   (bound in herdr-claude.tmux)
+pane=$1 pid=$2
+bin=$(dirname "$0")
+
+descendants() {
+  local child
+  echo "$1"
+  for child in $(pgrep -P "$1"); do descendants "$child"; done
+}
+
+terminal= ssh_pid=
+for p in $(descendants "$pid"); do
+  args=$(ps -o args= -p "$p")
+  if [[ $args =~ (^|/)herdr\ terminal\ attach\ ([^ ]+) ]]; then
+    terminal=${BASH_REMATCH[2]}
+  elif [[ $args =~ ^ssh\  ]]; then
+    ssh_pid=$p
+  fi
+done
+# The ssh session's local port; dev's attach carries it in SSH_CONNECTION.
+port=
+[ -n "$ssh_pid" ] && port=$(lsof -a -p "$ssh_pid" -iTCP -sTCP:ESTABLISHED -Fn 2>/dev/null |
+  sed -n 's/^n[^:]*:\([0-9]*\)->.*/\1/p' | head -1)
+host=$([ -n "$port" ] && ~/.config/tmux/pane-host.sh "$pane" "$pid")
+
+# Close the session before the pane: killing the pane drops the ssh connection,
+# and the attach that identifies the session goes with it.
+if [ -n "$terminal" ]; then
+  "$bin/close-session" --terminal "$terminal"
+elif [ -n "$port" ] && [ -n "$host" ]; then
+  ssh -o BatchMode=yes -o ConnectTimeout=5 "$host" \
+    "~/.config/tmux/plugins/tmux-herdr-claude/bin/close-session --ssh-client-port $port" >/dev/null 2>&1
+fi
+tmux kill-pane -t "$pane"
+exit 0

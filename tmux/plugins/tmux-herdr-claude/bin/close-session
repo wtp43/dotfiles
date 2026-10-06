@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+# Close the herdr pane behind a `herdr terminal attach`, ending its Claude Code
+# session. Runs on the machine whose herdr hosts it (over ssh for dev).
+# Usage: close-session --terminal <terminal_id>
+#        close-session --ssh-client-port <port>   - the attach in that ssh session
+PATH=$HOME/.local/bin:$PATH:/opt/homebrew/bin
+herdr=${HERDR_BIN_PATH:-herdr}
+
+case $1 in
+  --terminal) terminal=$2 ;;
+  --ssh-client-port)
+    for pid in $(pgrep -f '[h]erdr terminal attach'); do
+      read -r _ port _ < <(tr '\0' '\n' <"/proc/$pid/environ" 2>/dev/null | sed -n 's/^SSH_CONNECTION=//p')
+      if [ "$port" = "$2" ] && [[ $(ps -o args= -p "$pid") =~ terminal\ attach\ ([^ ]+) ]]; then
+        terminal=${BASH_REMATCH[1]}
+        break
+      fi
+    done ;;
+  *) exit 2 ;;
+esac
+[ -n "$terminal" ] || exit 0
+
+pane=$("$herdr" api snapshot 2>/dev/null |
+  jq -r --arg t "$terminal" '.result.snapshot.panes[] | select(.terminal_id == $t) | .pane_id')
+[ -n "$pane" ] && "$herdr" pane close "$pane" >/dev/null
+exit 0
