@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Label each tab "[<number>] <title>" from the terminal title of the pane focused
-# in it (see herdr-plugin.toml).
+# Label each tab "<state> [<number>] <title>" from its agents' state and the
+# terminal title of the pane focused in it (see herdr-plugin.toml).
 # Usage: tab-titles.sh sync   - relabel now, and start the poller if needed
 #        tab-titles.sh loop   - poller for title changes, which have no hook
 PATH=$PATH:/opt/homebrew/bin
@@ -19,12 +19,20 @@ relabel() {
     | ($s.panes | map({key: .pane_id, value: (.terminal_title_stripped // "")})
        | from_entries) as $titles
     | (reduce $s.tabs[] as $t ({}; .[$t.workspace_id] += [$t.tab_id])) as $order
+    | (reduce $s.agents[] as $a ({}; .[$a.tab_id] += [$a.agent_status])) as $states
     | $s.layouts[] as $l
     | ($s.tabs[] | select(.tab_id == $l.tab_id)) as $t
     | ($order[$t.workspace_id] | index($t.tab_id) + 1) as $pos
     | ($titles[$l.focused_pane_id] // "") as $title
     | (if ($title | length) > $max then $title[0:$max - 1] + "…" else $title end) as $title
-    | ("[\($pos)]" + (if $title == "" then "" else " \($title)" end)) as $want
+    # The most urgent agent state in the tab, drawn as herdr symbols style does.
+    | ($states[$t.tab_id] // []) as $st
+    | (if ($st | index("blocked")) then "× "
+       elif ($st | index("working")) then "◐ "
+       elif ($st | index("done")) then "✓ "
+       elif ($st | index("idle")) then "○ "
+       else "" end) as $icon
+    | ("\($icon)[\($pos)]" + (if $title == "" then "" else " \($title)" end)) as $want
     | select($want != $t.label)
     | [$t.tab_id, $want] | @tsv' <<<"$snapshot" |
     while IFS=$'\t' read -r tab label; do

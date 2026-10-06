@@ -1,0 +1,28 @@
+id = "wt.sidebar-icons"
+name = "Sidebar icons"
+version = "0.1.0"
+min_herdr_version = "0.9.3"
+description = "Report $title and $agent_line sidebar tokens: the GitHub mark before git repos, an icon before agents"
+platforms = ["macos", "linux"]
+
+# A sidebar row puts " · " between tokens, so an icon can only sit next to a
+# name inside one metadata value; config.toml's [ui.sidebar] rows show them.
+[[startup]]
+command = ["bash", "sidebar-icons.sh"]
+
+[[events]]
+on = "workspace.created"
+command = ["bash", "sidebar-icons.sh"]
+
+[[events]]
+on = "workspace.renamed"
+command = ["bash", "sidebar-icons.sh"]
+
+# The icon follows the repo the workspace's first pane is in.
+[[events]]
+on = "pane.focused"
+command = ["bash", "sidebar-icons.sh"]
+
+[[events]]
+on = "pane.agent_status_changed"
+command = ["bash", "sidebar-icons.sh"]

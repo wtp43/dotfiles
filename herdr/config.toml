@@ -12,7 +12,9 @@ auto_switch = false
 # dividers (white text on the active tab would make them white too).
 panel_bg = "reset"
 surface_dim = "#1a1b21"
-accent = "#5abfb5"      # focused pane border and active tab (my-theme's bright cyan)
+sidebar_bg = "#1f2126"      # Herdr GPUI's sidebar (sampled)
+active_row_bg = "#292a33"   # Herdr GPUI's highlighted rows (sampled)
+accent = "#5eb1ff"      # focused pane border and active tab (a lighter Ghostty progress-bar blue)
 
 [ui]
 # Herdr has no minimum-drag threshold, so a stray click-drag would clobber the
@@ -29,6 +31,10 @@ pane_scrollbars = false
 
 prompt_new_tab_name = false
 
+# The compact collapsed sidebar can't match Herdr GPUI's (machine numbers, no
+# agent icons), so collapsing hides it instead.
+sidebar_collapsed_mode = "hidden"
+
 # The tab row stands in for the tmux status line: tabs as the window list on
 # the left, the tmux status items on the right (see status.sh).
 tab_bar_position = "bottom"
@@ -41,6 +47,28 @@ tab_bar_right = [
   { type = "command", command = "~/.config/herdr/status.sh workspace", interval_seconds = 2, timeout_seconds = 2 },
   { type = "command", command = "~/.config/herdr/status.sh remote", interval_seconds = 3, timeout_seconds = 6 },
   { type = "datetime", format = "%b %d" },
+]
+
+# Herdr GPUI's comfortable sidebar. $title (" .config") and $agent_line
+# ("✳ claude") come from the sidebar-icons plugin, since separate tokens would
+# be joined with " · ".
+[ui.sidebar.spaces]
+row_gap = 1
+rows = [
+  ["state_icon", "$title"],
+  [{ token = "branch", fg = "#f4b8e4" }, "git_status"],
+]
+
+[ui.sidebar.agents]
+rows = [
+  ["state_icon", { token = "machine", rules = [{ equals = "Local", hide = true }] }, "workspace", "tab"],
+  ["agent"],
+]
+
+[ui.sidebar.agents.rows_by_agent]
+claude = [
+  ["state_icon", { token = "machine", rules = [{ equals = "Local", hide = true }] }, "workspace", "tab"],
+  [{ token = "$agent_line", fg = "#6d738a" }],
 ]
 
 [ui.toast]
@@ -60,8 +88,9 @@ new_tab = "prefix+t"
 close_tab = ""
 close_pane = ""
 
-# prefix+Tab goes to the last workspace (below), so it displaces herdr's
-# prefix+tab pane cycling.
+# prefix+Tab: next workspace in sidebar order (displaces herdr's prefix+tab
+# pane cycling).
+next_workspace = "prefix+tab"
 cycle_pane_next = ""
 
 # tmux prefix+arrows: resize (prefix+r still enters repeatable resize mode)
@@ -126,13 +155,6 @@ key = "prefix+l"
 type = "shell"
 command = "~/.config/herdr/split-same.sh right"
 description = "split right"
-
-# tmux prefix+Tab: switch-client -l, through the last-workspace plugin.
-[[keys.command]]
-key = "prefix+tab"
-type = "plugin_action"
-command = "wt.last-workspace.back"
-description = "last workspace"
 
 # Herdr only confirms closing a workspace; these go through the confirm-close plugin.
 [[keys.command]]

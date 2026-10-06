@@ -2,11 +2,11 @@ id = "wt.tab-titles"
 name = "Tab titles"
 version = "0.1.0"
 min_herdr_version = "0.9.3"
-description = "Label each tab with its [number] and its focused pane's title, like tmux window names"
+description = "Label each tab with its agents' state, its [number] and its focused pane's title, like tmux window names"
 platforms = ["macos", "linux"]
 
 # Herdr has no title-changed hook, so tab-titles.sh starts a polling loop;
-# these hooks make focus and tab changes show immediately.
+# these hooks make focus, tab and agent state changes show immediately.
 [[startup]]
 command = ["bash", "tab-titles.sh", "sync"]
 
@@ -28,4 +28,8 @@ command = ["bash", "tab-titles.sh", "sync"]
 
 [[events]]
 on = "pane.closed"
+command = ["bash", "tab-titles.sh", "sync"]
+
+[[events]]
+on = "pane.agent_status_changed"
 command = ["bash", "tab-titles.sh", "sync"]
