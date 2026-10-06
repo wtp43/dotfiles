@@ -11,8 +11,7 @@ font-codepoint-map = U+E000-U+F8FF,U+F0000-U+FFFFD=MesloLGS Nerd Font
 adjust-cell-height = 10%
 adjust-cursor-height = -25%
 adjust-box-thickness = 1
-# extend-always stretched herdr's bottom tab bar into the leftover padding.
-window-padding-color = background
+window-padding-color = extend-always
 window-padding-y = 2,0
 window-padding-balance = equal
 
