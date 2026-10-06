@@ -1,0 +1,17 @@
+id = "wt.agent-notify"
+name = "Agent notify"
+version = "0.1.0"
+min_herdr_version = "0.9.3"
+description = "macOS notifications when an agent finishes or needs input, with no Herdr window open, including agents on saved SSH machines"
+platforms = ["macos", "linux"]
+
+# Herdr only notifies through an open Herdr window, so agents attached from tmux
+# (tmux-herdr-claude) would never notify. On macOS this posts them itself; on a
+# remote machine it logs them for the Mac's listener, which follows that log
+# over ssh (see agent-notify.sh).
+[[startup]]
+command = ["bash", "agent-notify.sh", "startup"]
+
+[[events]]
+on = "pane.agent_status_changed"
+command = ["bash", "agent-notify.sh", "event"]
