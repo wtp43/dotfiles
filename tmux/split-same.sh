@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Split a pane; if it runs ssh/mosh, the new pane opens the same connection,
+# Split a pane; if it runs ssh or etd, the new pane opens the same connection,
 # in the remote cwd when the remote shell reports it (OSC 7 -> #{pane_path}).
 # pgrep -P + ps -p instead of ps --ppid, which BSD/macOS ps lacks.
 pane=$1 pid=$2 path=$3 osc7=$4; shift 4
@@ -9,12 +9,14 @@ cmd=$(tmux show -pqv -t "$pane" @ssh_cmd)
 if [ -z "$cmd" ]; then
   for c in $(pgrep -P "$pid"); do
     args=$(ps -o args= -p "$c")
-    if [[ $args =~ ^(ssh|mosh|autossh)( |$) ]]; then cmd=$args; break; fi
+    if [[ $args =~ ^(ssh|autossh)( |$)|(^|[ /])etd( |$) ]]; then cmd=$args; break; fi
   done
 fi
 if [ -z "$cmd" ]; then
   exec tmux split-window -t "$pane" "$@" -c "$path"
 fi
+# A split of an etd pane gets its own remote session: drop the session name.
+[[ $cmd =~ (^|[ /])etd( ([^ ]+))? ]] && cmd="etd ${BASH_REMATCH[3]:-dev}"
 base=$cmd
 # Assumes the ssh line has no remote command of its own; one would take ours
 # as extra arguments.

@@ -240,3 +240,9 @@ fi
 # claude in tmux runs in herdr while the tmux-herdr-claude plugin is loaded.
 [[ -f ~/.config/tmux/plugins/tmux-herdr-claude/shell/herdr-claude.zsh ]] &&
   source ~/.config/tmux/plugins/tmux-herdr-claude/shell/herdr-claude.zsh
+
+# `et <host>` goes through etd, so the remote shell lives in a tmux session that
+# outlives the et client; any other et invocation runs et itself.
+et() {
+  if (( $# == 1 && $+commands[etd] )); then etd "$1"; else command et "$@"; fi
+}

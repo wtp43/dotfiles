@@ -1,5 +1,5 @@
 #!/bin/sh
-# CPU/RAM of the host an ssh/mosh pane is connected to, via the local mem-cpu.sh.
+# CPU/RAM of the host an ssh/et pane is connected to, via the local mem-cpu.sh.
 # Usage: remote-mem-cpu.sh <pane_id> <pane_pid>
 host=$(~/.config/tmux/pane-host.sh "$1" "$2")
 [ "$host" = "$(hostname -s)" ] && exit 0
