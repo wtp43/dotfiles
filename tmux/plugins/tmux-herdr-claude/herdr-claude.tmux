@@ -3,7 +3,8 @@
 # attached to the tmux pane, so herdr (and Heeler) can see and manage it.
 #
 # Load:   run-shell ~/.config/tmux/plugins/tmux-herdr-claude/herdr-claude.tmux
-# Revert: delete that tmux.conf line, then `tmux set-environment -gu LC_HERDR_CLAUDE`
+# Revert: delete that tmux.conf line, then `tmux set-environment -gu LC_HERDR_CLAUDE`,
+#         `tmux set -gu @resurrect-hook-post-save-layout` (and post-restore-all),
 #         and `tmux unbind -n C-v`, and rebind prefix x to plain
 #         `confirm-before -p "kill-pane #P? (y/n)" kill-pane` (or restart tmux).
 #
@@ -18,3 +19,7 @@ tmux bind -n C-v run-shell -b "$(dirname "$0")/bin/paste-image '#{pane_id}' '#{p
 # prefix x also ends the herdr Claude Code session the pane shows.
 tmux bind x confirm-before -p "kill-pane #P? (y/n)" \
   "run-shell -b \"$(dirname "$0")/bin/close-pane '#{pane_id}' '#{pane_pid}'\""
+
+# tmux-resurrect: a restored pane shows `claude --resume <id>` at its prompt, unrun.
+tmux set -g @resurrect-hook-post-save-layout "$(dirname "$0")/bin/resurrect-claude save"
+tmux set -g @resurrect-hook-post-restore-all "$(dirname "$0")/bin/resurrect-claude restore"
