@@ -73,6 +73,15 @@ def notify_not_in_herdr(cwd):
         pass
 
 
+def resumed_session(args):
+    for i, arg in enumerate(args):
+        if arg.startswith("--resume="):
+            return arg.split("=", 1)[1]
+        if arg in ("--resume", "-r") and i + 1 < len(args) and not args[i + 1].startswith("-"):
+            return args[i + 1]
+    return None
+
+
 def main():
     args = sys.argv[1:]
     cwd = os.path.realpath(os.getcwd())
@@ -81,6 +90,15 @@ def main():
     except (OSError, RuntimeError, ValueError):
         notify_not_in_herdr(cwd)
         sys.exit(NOT_IN_HERDR)
+
+    attach = os.path.join(os.path.dirname(os.path.realpath(__file__)), "attach-terminal")
+    # Resuming a session herdr already runs (a tmux pane that died, or a
+    # tmux-resurrect prompt) attaches to it instead of starting a second copy.
+    session = resumed_session(args)
+    running = next((p["terminal_id"] for p in snapshot["panes"]
+                    if session and (p.get("agent_session") or {}).get("value") == session), None)
+    if running:
+        os.execv(attach, [attach, running, "--takeover"])
 
     root = project_root(cwd)
     workspace = next((p["workspace_id"] for p in snapshot["panes"] if inside(p.get("cwd"), root)), None)
@@ -97,7 +115,6 @@ def main():
         created = call("tab.create", {"workspace_id": workspace, "cwd": cwd, "focus": False, "env": env})
     else:
         created = call("workspace.create", {"cwd": cwd, "label": os.path.basename(root), "focus": False, "env": env})
-    attach = os.path.join(os.path.dirname(os.path.realpath(__file__)), "attach-terminal")
     os.execv(attach, [attach, created["root_pane"]["terminal_id"]])
 
 

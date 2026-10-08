@@ -2,13 +2,12 @@
 # tmux-resurrect hooks. save: record the herdr Claude Code session each pane is
 # attached to. restore: type `claude --resume <id>` at that pane's prompt, unrun.
 # Usage: resurrect-claude save|restore
-PATH=$HOME/.local/bin:$PATH:/opt/homebrew/bin
-herdr=${HERDR_BIN_PATH:-herdr}
+. "$(dirname "$0")/../lib/herdr.sh"
 file=${XDG_DATA_HOME:-$HOME/.local/share}/tmux/resurrect/claude-sessions.tsv
 
 case $1 in
 save)
-  snapshot=$("$herdr" api snapshot 2>/dev/null) || exit 0
+  snap=$(snapshot) || exit 0
   ps -ax -o ppid=,args= >"$file.ps"
   tmux list-panes -a -F '#{session_name}:#{window_index}.#{pane_index}	#{pane_pid}	#{pane_current_path}' |
     while IFS=$'\t' read -r target pid path; do
@@ -16,7 +15,7 @@ save)
       [ -n "$term" ] || continue
       jq -r --arg t "${term#attach-terminal }" --arg target "$target" --arg path "$path" '
         .result.snapshot.panes[] | select(.terminal_id == $t and .agent_session.value != null)
-        | [$target, .agent_session.value, .cwd, $path] | @tsv' <<<"$snapshot"
+        | [$target, .agent_session.value, .cwd, $path] | @tsv' <<<"$snap"
     done >"$file.tmp"
   rm -f "$file.ps"
   mv "$file.tmp" "$file"

@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+# Claude Code SessionStart hook (matcher resume, in ~/.claude/settings.json).
+# When /resume or --continue in a herdr tab picks a session another herdr pane
+# already runs, and a tmux pane shows this tab, that tmux pane moves to the
+# running session and this tab closes: one Claude Code per session.
+[ -n "$HERDR_ENV" ] && [ -n "$HERDR_PANE_ID" ] || exit 0
+. "$(dirname "$0")/../lib/herdr.sh"
+
+session=$(jq -r '.session_id // empty')
+[ -n "$session" ] || exit 0
+other=$(session_terminal "$session" "$HERDR_PANE_ID")
+[ -n "$other" ] || exit 0
+own=$(terminal_of "$HERDR_PANE_ID")
+
+if [ -n "$own" ] && pgrep -f "attach-terminal $own( |\$)" >/dev/null; then
+  mkdir -p "$redirects"
+  echo "$other" >"$redirects/$own"
+  # Closing the pane ends this Claude Code and its hooks, so not from here.
+  nohup sh -c "sleep 1; '$herdr' pane close '$HERDR_PANE_ID'" </dev/null >/dev/null 2>&1 &
+  jq -nc '{systemMessage: "This session is already running in herdr; switching to it."}'
+else
+  jq -nc --arg p "$(pane_of "$other")" \
+    '{systemMessage: "This session is also running in herdr pane \($p); close one so they do not both write it."}'
+fi

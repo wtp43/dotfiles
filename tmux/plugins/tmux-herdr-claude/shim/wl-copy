@@ -6,13 +6,11 @@
 for arg; do
   case $arg in -p|--primary) cat >/dev/null; exit 0 ;; esac
 done
-PATH=$PATH:/opt/homebrew/bin
-herdr=${HERDR_BIN_PATH:-herdr}
+. "$(dirname "$0")/../lib/herdr.sh"
 seq=$(printf '\033]52;c;%s\a' "$(base64 -w0)")
 
 sent=
-term=$("$herdr" api snapshot 2>/dev/null |
-  jq -r --arg p "${HERDR_PANE_ID:-}" '.result.snapshot.panes[] | select(.pane_id == $p) | .terminal_id')
+term=$(terminal_of "${HERDR_PANE_ID:-}")
 if [ -n "$term" ]; then
   for pid in $(pgrep -u "$(id -u)" -f "terminal attach $term"); do
     tty=$(readlink "/proc/$pid/fd/1")

@@ -2,7 +2,7 @@
 # Pick a Claude Code session running in herdr and attach it to this terminal,
 # taking input over from any other attach. ctrl+b q detaches again.
 # Usage: cattach [query]   - with one match, attaches without asking
-herdr=${HERDR_BIN_PATH:-herdr}
+. "$(dirname "$0")/../lib/herdr.sh"
 
 sessions=$("$herdr" api snapshot | jq -r '.result.snapshot as $s
   | ($s.workspaces | map({key: .workspace_id, value: .label}) | from_entries) as $ws
