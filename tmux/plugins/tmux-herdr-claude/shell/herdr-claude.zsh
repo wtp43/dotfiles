@@ -17,6 +17,16 @@ if [[ -n $HERDR_ENV && -n $HERDR_CLAUDE_EXEC ]]; then
   eval "exec claude $_herdr_claude_args"
 fi
 
+# Any other Claude Code in a herdr tab on a remote machine, such as the
+# `claude --resume` herdr reruns itself after a server restart (which skips
+# bin/herdr-claude and its env): copy through shim/wl-copy all the same.
+if [[ -n $HERDR_ENV && $OSTYPE != darwin* ]]; then
+  _herdr_claude_shim=${${(%):-%x}:A:h:h}/shim
+  # zshrc's tmux alias is expanded while this block parses, so `function claude`.
+  unalias claude 2>/dev/null
+  function claude { PATH=$_herdr_claude_shim:$PATH WAYLAND_DISPLAY=herdr-clipboard command claude "$@" }
+fi
+
 [[ -z $HERDR_ENV && ( -n $TMUX || -n $LC_HERDR_CLAUDE ) ]] || return 0
 
 _herdr_claude_bin=${${(%):-%x}:A:h:h}/bin
