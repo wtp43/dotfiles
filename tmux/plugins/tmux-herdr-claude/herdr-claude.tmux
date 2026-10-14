@@ -4,8 +4,9 @@
 #
 # Load:   run-shell ~/.config/tmux/plugins/tmux-herdr-claude/herdr-claude.tmux
 #         plus a Claude Code SessionStart hook (matcher ^resume$) in
-#         ~/.claude/settings.json running bin/resume-hook.
-# Revert: delete that tmux.conf line and the hook, then `tmux set-environment -gu LC_HERDR_CLAUDE`,
+#         ~/.claude/settings.json running bin/resume-hook, and a SessionEnd hook
+#         running bin/end-hook (prints `claude --resume` when a session exits).
+# Revert: delete that tmux.conf line and the hooks, then `tmux set-environment -gu LC_HERDR_CLAUDE`,
 #         `tmux set -gu @resurrect-hook-post-save-layout` (and post-restore-all),
 #         and `tmux unbind -n C-v`, and rebind prefix x to plain
 #         `confirm-before -p "kill-pane #P? (y/n)" kill-pane` (or restart tmux).

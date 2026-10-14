@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# Claude Code SessionEnd hook (in ~/.claude/settings.json). In a herdr tab, leave
+# the ending session for bin/attach-terminal, which prints how to resume it once
+# the tab closes. /clear and /resume keep the tab, so they leave nothing.
+[ -n "$HERDR_ENV" ] && [ -n "$HERDR_PANE_ID" ] || exit 0
+. "$(dirname "$0")/../lib/herdr.sh"
+
+input=$(cat)
+case $(jq -r '.reason // empty' <<<"$input") in clear|resume) exit 0 ;; esac
+mkdir -p "$ended"
+# Tabs no tmux pane attached to (viewed in herdr) are never read; prune them.
+find "$ended" -type f -mmin +1440 -delete 2>/dev/null
+jq -c '{session_id, transcript_path}' <<<"$input" >"$ended/$HERDR_PANE_ID"

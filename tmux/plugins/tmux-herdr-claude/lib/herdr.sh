@@ -4,6 +4,8 @@ PATH=$HOME/.local/bin:$PATH:/opt/homebrew/bin
 herdr=${HERDR_BIN_PATH:-herdr}
 # bin/resume-hook leaves <terminal> -> <terminal> here for bin/attach-terminal.
 redirects=${XDG_STATE_HOME:-$HOME/.local/state}/tmux-herdr-claude/redirect
+# bin/end-hook leaves <pane_id> -> the ended session for bin/attach-terminal.
+ended=${XDG_STATE_HOME:-$HOME/.local/state}/tmux-herdr-claude/ended
 
 snapshot() { "$herdr" api snapshot 2>/dev/null; }
 
