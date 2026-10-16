@@ -15,9 +15,12 @@ remote_log='.local/state/herdr/plugins/wt.agent-notify/events.log'
 # with its own title and body (tmux-herdr-claude's herdr-claude writes those).
 post() {
   local title subtitle body
-  title=$(jq -r 'if .notice then .notice.title else "\(.agent // "agent" | ascii_upcase[0:1] + .[1:]) \(if .status == "blocked" then "needs input" else "finished" end)" end' <<<"$2")
-  subtitle=$(jq -r --arg m "$1" '[$m, .workspace] | map(select(. != "" and . != null)) | join(" · ")' <<<"$2")
-  body=$(jq -r '.notice.body // .title // ""' <<<"$2")
+  title=$(jq -r --arg m "$1" '[
+    (if .notice then .notice.title else "\(.agent // "agent" | ascii_upcase[0:1] + .[1:]) \(if .status == "blocked" then "needs input" else "finished" end)" end),
+    (.host // $m | select(. != "") | "(\(.))")
+  ] | join(" ")' <<<"$2")
+  subtitle=$(jq -r '.session // ""' <<<"$2")
+  body=$(jq -r '.notice.body // ""' <<<"$2")
   if command -v terminal-notifier >/dev/null; then
     terminal-notifier -title "$title" -subtitle "$subtitle" -message "${body:- }" -sound default >/dev/null
   else
@@ -62,8 +65,8 @@ case $1 in
     echo "$status" >"$last"
     case $status in done|blocked) ;; *) exit 0 ;; esac
 
-    workspace=$("$herdr" workspace get "$(jq -r .workspace_id <<<"$event")" 2>/dev/null | jq -r '.result.workspace.label // empty')
-    line=$(jq -c --arg ws "$workspace" '{status: .agent_status, agent: (.display_agent // .agent), workspace: $ws, title}' <<<"$event")
+    session=$("$herdr" pane get "$pane" 2>/dev/null | jq -r '.result.pane.terminal_title_stripped // empty')
+    line=$(jq -c --arg host "$(hostname -s)" --arg session "$session" '{status: .agent_status, agent: (.display_agent // .agent), host: $host, session: $session}' <<<"$event")
     if [ "$(uname)" = Darwin ]; then
       post "" "$line"
       start_listener

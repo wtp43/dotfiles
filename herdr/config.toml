@@ -72,9 +72,9 @@ claude = [
 ]
 
 [ui.toast]
-# Pop up when a background agent finishes or needs input. "system" posts via
-# osascript, so banners show even while Ghostty is focused ("terminal" doesn't).
-delivery = "system"
+# The agent-notify plugin posts these instead: herdr's own text is fixed to
+# "<workspace> · <n>", and with it on every banner arrived twice.
+delivery = "off"
 
 [keys]
 prefix = "ctrl+a"
