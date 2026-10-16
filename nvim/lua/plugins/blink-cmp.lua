@@ -1,7 +1,7 @@
 return {
   "saghen/blink.cmp",
   event = "InsertEnter",
-  dependencies = { "codeium.nvim", "saghen/blink.compat" },
+  dependencies = { "saghen/blink.compat" },
   opts = {
     enabled = function()
       local path = vim.api.nvim_buf_get_name(0)

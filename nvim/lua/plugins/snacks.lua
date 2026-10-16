@@ -47,7 +47,12 @@ return {
       enabled = true,
       timeout = 3000,
     },
-    image = { enabled = true },
+    image = {
+      enabled = true,
+      -- No inline images in documents: snacks has no per-language switch, and
+      -- mermaid diagrams are read in the browser docs site instead.
+      doc = { enabled = false },
+    },
     quickfile = { enabled = true },
     words = { enabled = true },
     styles = {

@@ -3,6 +3,9 @@ return {
     "neovim/nvim-lspconfig",
 
     opts = {
+      -- tiny-inline-diagnostic draws these; LazyVim's lspconfig setup would turn
+      -- native virtual text back on when it loads after tiny's VeryLazy config.
+      diagnostics = { virtual_text = false },
       inlay_hints = { enabled = false },
       servers = {
         basedpyright = {
