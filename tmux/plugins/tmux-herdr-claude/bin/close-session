@@ -3,6 +3,7 @@
 # session. Runs on the machine whose herdr hosts it (over ssh for dev).
 # Usage: close-session --terminal <terminal_id>
 #        close-session --ssh-client-port <port>   - the attach in that ssh session
+#        close-session --tmux-session <name>      - every attach in that tmux session (etd)
 . "$(dirname "$0")/../lib/herdr.sh"
 
 case $1 in
@@ -15,10 +16,24 @@ case $1 in
         break
       fi
     done ;;
+  --tmux-session)
+    descendants() {
+      local child
+      echo "$1"
+      for child in $(pgrep -P "$1"); do descendants "$child"; done
+    }
+    for root in $(tmux list-panes -s -t "=$2" -F '#{pane_pid}' 2>/dev/null); do
+      for pid in $(descendants "$root"); do
+        [[ $(ps -o args= -p "$pid") =~ (^|/)(herdr\ terminal\ attach|attach-terminal)\ ([^ ]+) ]] &&
+          terminal+=" ${BASH_REMATCH[3]}"
+      done
+    done ;;
   *) exit 2 ;;
 esac
 [ -n "$terminal" ] || exit 0
 
-pane=$(pane_of "$terminal")
-[ -n "$pane" ] && "$herdr" pane close "$pane" >/dev/null
+for t in $terminal; do
+  pane=$(pane_of "$t")
+  [ -n "$pane" ] && "$herdr" pane close "$pane" >/dev/null
+done
 exit 0

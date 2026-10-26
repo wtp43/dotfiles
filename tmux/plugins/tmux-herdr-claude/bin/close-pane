@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # tmux prefix x: kill the pane, and if it showed a herdr Claude Code session
 # (a local `herdr terminal attach`, or one inside an ssh session) close that
-# session's herdr tab too; if it ran etd, end its tmux session on the host.
+# session's herdr tab too; if it ran etd, end its tmux session on the host and
+# the herdr Claude Code sessions attached inside it.
 # Detaching (ctrl+b q), a dropped connection or tmux kill-server keep both.
 # Usage: close-pane <pane_id> <pane_pid>   (bound in herdr-claude.tmux)
 pane=$1 pid=$2
@@ -39,6 +40,7 @@ elif [ -n "$port" ] && [ -n "$host" ]; then
     "~/.config/tmux/plugins/tmux-herdr-claude/bin/close-session --ssh-client-port $port" >/dev/null 2>&1
 fi
 [ -n "$etd_session" ] && ssh -o BatchMode=yes -o ConnectTimeout=5 "$etd_host" \
-  "tmux kill-session -t $etd_session" </dev/null >/dev/null 2>&1
+  "~/.config/tmux/plugins/tmux-herdr-claude/bin/close-session --tmux-session $etd_session; tmux kill-session -t $etd_session" \
+  </dev/null >/dev/null 2>&1
 tmux kill-pane -t "$pane"
 exit 0
