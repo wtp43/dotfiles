@@ -246,3 +246,6 @@ fi
 et() {
   if (( $# == 1 && $+commands[etd] )); then etd "$1"; else command et "$@"; fi
 }
+
+# bun completions
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
